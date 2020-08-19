@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:mydeca_flutter/pages/auth/login_page.dart';
 import 'package:mydeca_flutter/pages/auth/register_page.dart';
+import 'package:mydeca_flutter/pages/conference/conference_page.dart';
 import 'package:mydeca_flutter/pages/home/home_page.dart';
 import 'package:mydeca_flutter/pages/startup/auth_checker.dart';
 import 'package:mydeca_flutter/pages/startup/onboarding_page.dart';
@@ -36,13 +36,15 @@ Future<Null> main() async {
   router.define('/register', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
     return new RegisterPage();
   }));
-  router.define('/login', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-    return new LoginPage();
-  }));
 
   // HOME ROUTES
   router.define('/home', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
     return new HomePage();
+  }));
+
+  // CONFERENCE ROUTES
+  router.define('/conferences', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new ConferencePage();
   }));
 
   runApp(new MaterialApp(

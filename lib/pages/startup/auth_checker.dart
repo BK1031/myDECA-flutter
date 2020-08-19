@@ -42,6 +42,19 @@ class _AuthCheckerState extends State<AuthChecker> {
     if (fb.FirebaseAuth.instance.currentUser != null) {
       FirebaseDatabase.instance.reference().child("users").child(fb.FirebaseAuth.instance.currentUser.uid).once().then((value) {
         currUser = new User.fromSnapshot(value);
+        print("––––––––––––– DEBUG INFO ––––––––––––––––");
+        print("NAME: ${currUser.firstName} ${currUser.lastName}");
+        print("EMAIL: ${currUser.email}");
+        print("ROLE: ${currUser.roles.first}");
+        print("–––––––––––––––––––––––––––––––––––––––––");
+        if (value.value["darkMode"] != null && value.value["darkMode"]) {
+          setState(() {
+            currBackgroundColor = darkBackgroundColor;
+            currCardColor = darkCardColor;
+            currDividerColor = darkDividerColor;
+            currTextColor = darkTextColor;
+          });
+        }
         setState(() {
           percent = 1.0;
         });

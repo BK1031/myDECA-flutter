@@ -6,11 +6,11 @@ import 'package:mydeca_flutter/models/version.dart';
 final router = new Router();
 final RouteObserver<PageRoute> routeObserver = new RouteObserver<PageRoute>();
 
-Version appVersion = new Version("0.1.1+1");
+Version appVersion = new Version("0.1.2+1");
 String appStatus = "";
 String appFull = "Version ${appVersion.toString()}";
 
-User currUser;
+User currUser = new User.plain();
 
 String appLegal = """
 MIT License

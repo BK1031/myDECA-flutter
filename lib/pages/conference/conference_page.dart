@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:mydeca_flutter/pages/app_drawer.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
 
-class HomePage extends StatefulWidget {
+import '../app_drawer.dart';
+
+class ConferencePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _ConferencePageState createState() => _ConferencePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ConferencePageState extends State<ConferencePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
         title: new Text(
-          "HOME",
+          "CONFERENCE",
           style: TextStyle(fontFamily: "Montserrat"),
         ),
       ),

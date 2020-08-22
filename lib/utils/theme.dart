@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 bool darkMode = false;
 bool darkAppBar = false;
@@ -52,4 +53,11 @@ final mainTheme = new ThemeData(
             )
         )
     )
+);
+
+final markdownStyle = MarkdownStyleSheet(
+  h1: TextStyle(fontFamily: "Montserrat", fontSize: 26, color: currTextColor, fontWeight: FontWeight.bold),
+  h2: TextStyle(fontFamily: "Montserrat", fontSize: 22, color: currTextColor, fontWeight: FontWeight.bold),
+  h3: TextStyle(fontFamily: "Montserrat", fontSize: 18, color: currTextColor, fontWeight: FontWeight.bold),
+  p: TextStyle(fontSize: 18, color: currTextColor),
 );

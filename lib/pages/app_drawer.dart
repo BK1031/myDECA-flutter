@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:mydeca_flutter/utils/config.dart';
@@ -70,6 +71,16 @@ class _AppDrawerState extends State<AppDrawer> {
                       },
                     ),
                     new ListTile(
+                      leading: Icon(Icons.notifications, color: Colors.white.withOpacity(0.70),),
+                      title: new Text("Announcements", style: TextStyle(color: Colors.white, fontSize: 17),),
+                      onTap: () {
+                        router.pop(context);
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          router.navigateTo(context, "/home/announcements", transition: TransitionType.fadeIn, replace: true);
+                        });
+                      },
+                    ),
+                    new ListTile(
                       leading: Icon(Icons.people, color: Colors.white.withOpacity(0.70),),
                       title: new Text("Conferences", style: TextStyle(color: Colors.white, fontSize: 17),),
                       onTap: () {
@@ -116,7 +127,8 @@ class _AppDrawerState extends State<AppDrawer> {
                   width: double.infinity,
                   child: new RaisedButton(
                     onPressed: () {
-
+                      FirebaseAuth.instance.signOut();
+                      router.navigateTo(context, "/auth-checker", transition: TransitionType.fadeIn, replace: true);
                     },
                     color: Colors.red,
                     textColor: Colors.white,

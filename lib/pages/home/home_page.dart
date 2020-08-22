@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mydeca_flutter/pages/app_drawer.dart';
+import 'package:mydeca_flutter/utils/config.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,6 +20,16 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: new AppDrawer(),
       backgroundColor: currBackgroundColor,
+      body: new Container(
+        child: new Column(
+          children: [
+            new Text(
+              "Welcome back, ${currUser.firstName}",
+              style: TextStyle(fontFamily: "Montserrat", fontSize: 35, fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

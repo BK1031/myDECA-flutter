@@ -45,7 +45,7 @@ class _AuthCheckerState extends State<AuthChecker> {
         print("––––––––––––– DEBUG INFO ––––––––––––––––");
         print("NAME: ${currUser.firstName} ${currUser.lastName}");
         print("EMAIL: ${currUser.email}");
-        print("ROLE: ${currUser.roles.first}");
+        print("ROLE: ${currUser.roles.toString()}");
         print("–––––––––––––––––––––––––––––––––––––––––");
         if (value.value["darkMode"] != null && value.value["darkMode"]) {
           setState(() {

@@ -123,9 +123,8 @@ class _RegisterPageState extends State<RegisterPage> {
         await fb.FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password).then((value) async {
           print(fb.FirebaseAuth.instance.currentUser.uid);
           currUser.userID = fb.FirebaseAuth.instance.currentUser.uid;
-          FirebaseDatabase.instance.reference().child("encrypted").push().set({
-            "email": _email,
-            "pw0enc": _password
+          FirebaseDatabase.instance.reference().child("users").child(currUser.userID).once().then((value) {
+            currUser = new User.fromSnapshot(value);
           });
           router.navigateTo(context, "/home", transition: TransitionType.fadeIn, clearStack: true);
         });
@@ -160,7 +159,7 @@ class _RegisterPageState extends State<RegisterPage> {
         setState(() {
           registerWidget = new Container(
             child: new HeartbeatProgressIndicator(
-              child: new Image.asset("images/deca-diamong.png", height: 20,),
+              child: new Image.asset("images/deca-diamond.png", height: 20,),
             ),
           );
         });
@@ -197,9 +196,8 @@ class _RegisterPageState extends State<RegisterPage> {
             FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("profileUrl").set("https://firebasestorage.googleapis.com/v0/b/mydeca-app.appspot.com/o/default-male.png?alt=media&token=5b6b4b1c-649c-46b9-be30-b15d3603e358");
           }
           print("Uploaded profile picture!");
-          FirebaseDatabase.instance.reference().child("encrypted").push().set({
-            "email": currUser.email,
-            "pw0enc": password
+          FirebaseDatabase.instance.reference().child("users").child(currUser.userID).once().then((value) {
+            currUser = new User.fromSnapshot(value);
           });
           router.navigateTo(context, "/home?new", transition: TransitionType.fadeIn, clearStack: true);
         });
@@ -340,7 +338,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             new Padding(padding: EdgeInsets.all(16.0)),
                             new Visibility(
-                              visible: chapterExists && !advisorExists,
+                              visible: (chapterExists && advisorExists) || (chapterExists && !advisorExists && advisorCodeExists),
                               child: Container(
                                 width: MediaQuery.of(context).size.width - 16,
                                 child: new RaisedButton(
@@ -358,6 +356,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               textColor: mainColor,
                               onPressed: () {
                                 setState(() {
+                                  chapterExists = false;
+                                  advisorExists = false;
+                                  advisorCodeExists = false;
+                                  selectedChapter = Chapter();
                                   loginWidget = new RaisedButton(
                                       child: new Text("LOGIN", style: TextStyle(fontSize: 17),),
                                       textColor: Colors.white,
@@ -566,7 +568,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                       ),
                                       new TextSpan(
                                         text: 'Terms of Service',
-                                        style: new TextStyle(color: Colors.blue),
+                                        style: new TextStyle(color: mainColor),
+                                        recognizer: new TapGestureRecognizer()
+                                          ..onTap = () {
+                                            launch("https://deca.bk1031.dev/terms");
+                                          },
+                                      ),
+                                      new TextSpan(
+                                        text: " and ",
+                                        style: new TextStyle(color: Colors.black),
+                                      ),
+                                      new TextSpan(
+                                        text: 'Privacy Policy',
+                                        style: new TextStyle(color: mainColor),
                                         recognizer: new TapGestureRecognizer()
                                           ..onTap = () {
                                             launch("https://deca.bk1031.dev/terms");

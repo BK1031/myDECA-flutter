@@ -1,7 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:mydeca_flutter/pages/announcement/announcement_details_page.dart';
+import 'package:mydeca_flutter/pages/announcement/announcement_page.dart';
+import 'package:mydeca_flutter/pages/announcement/new_announcement_page.dart';
 import 'package:mydeca_flutter/pages/auth/register_page.dart';
+import 'package:mydeca_flutter/pages/conference/conference_details_page.dart';
 import 'package:mydeca_flutter/pages/conference/conference_page.dart';
 import 'package:mydeca_flutter/pages/home/home_page.dart';
 import 'package:mydeca_flutter/pages/startup/auth_checker.dart';
@@ -42,9 +46,23 @@ Future<Null> main() async {
     return new HomePage();
   }));
 
+  // ANNOUNCEMENT ROUTES
+  router.define('/home/announcements', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new AnnouncementsPage();
+  }));
+  router.define('/home/announcements/details', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new AnnouncementDetailsPage();
+  }));
+  router.define('/home/announcements/new', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new NewAnnouncementPage();
+  }));
+
   // CONFERENCE ROUTES
   router.define('/conferences', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
     return new ConferencePage();
+  }));
+  router.define('/conferences/details', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new ConferenceDetailsPage();
   }));
 
   runApp(new MaterialApp(

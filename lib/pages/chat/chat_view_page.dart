@@ -339,9 +339,12 @@ class _ChatViewPageState extends State<ChatViewPage> {
     if (!rendered) getChat(ModalRoute.of(context).settings.name);
     return Scaffold(
       appBar: new AppBar(
-        title: new Text(
-          chatName.toUpperCase(),
-          style: TextStyle(fontFamily: "Montserrat"),
+        title: new FittedBox(
+          fit: BoxFit.fitWidth,
+          child: new Text(
+            chatName.toUpperCase(),
+            style: TextStyle(fontFamily: "Montserrat"),
+          ),
         ),
         actions: [
           new IconButton(

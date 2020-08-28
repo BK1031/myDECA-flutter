@@ -28,6 +28,48 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
     });
     FirebaseDatabase.instance.reference().child("users").onChildAdded.listen((event) {
       User user = new User.fromSnapshot(event.snapshot);
+      if (chatID == "General" && user.chapter.chapterID == currUser.chapter.chapterID) {
+        setState(() {
+          chatType = "Chapter";
+          usersList.add(new Container(
+            child: new InkWell(
+              child: new Card(
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  child: new Row(
+                    children: [
+                      new CircleAvatar(
+                        radius: 25,
+                        backgroundColor: roleColors[user.roles.first],
+                        child: new ClipRRect(
+                          borderRadius: new BorderRadius.all(Radius.circular(45)),
+                          child: new CachedNetworkImage(
+                            imageUrl: user.profileUrl,
+                            height: 45,
+                            width: 45,
+                          ),
+                        ),
+                      ),
+                      new Padding(padding: EdgeInsets.all(8),),
+                      new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          new Text(
+                              user.firstName + " " + user.lastName
+                          ),
+                          new Text(
+                              user.email
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ));
+        });
+      }
       if (user.chapter.chapterID == currUser.chapter.chapterID && user.roles.contains(route.split("?id=")[1])) {
         // User in Role Chat
         setState(() {
@@ -74,7 +116,44 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
       else if (user.chapter.chapterID == currUser.chapter.chapterID && user.groups.contains(route.split("?id=")[1])) {
         // User in GRoup chat
         setState(() {
-          chatType = "Role";
+          chatType = "Group";
+          usersList.add(new Container(
+            child: new InkWell(
+              child: new Card(
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  child: new Row(
+                    children: [
+                      new CircleAvatar(
+                        radius: 25,
+                        backgroundColor: roleColors[user.roles.first],
+                        child: new ClipRRect(
+                          borderRadius: new BorderRadius.all(Radius.circular(45)),
+                          child: new CachedNetworkImage(
+                            imageUrl: user.profileUrl,
+                            height: 45,
+                            width: 45,
+                          ),
+                        ),
+                      ),
+                      new Padding(padding: EdgeInsets.all(8),),
+                      new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          new Text(
+                              user.firstName + " " + user.lastName
+                          ),
+                          new Text(
+                              user.email
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ));
         });
       }
     });

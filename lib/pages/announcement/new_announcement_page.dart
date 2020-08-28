@@ -103,6 +103,7 @@ class _NewAnnouncementPageState extends State<NewAnnouncementPage> {
                   },
                   decoration: InputDecoration(
                       labelText: "Announcement Title",
+                      labelStyle: TextStyle(color: darkMode ? Colors.grey : Colors.black54),
                       border: InputBorder.none
                   ),
                   style: TextStyle(fontFamily: "Montserrat", fontSize: 25, color: currTextColor),
@@ -231,9 +232,11 @@ class _NewAnnouncementPageState extends State<NewAnnouncementPage> {
                             announcement.desc = value;
                           });
                         },
+                        style: TextStyle(color: currTextColor),
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: '# Heading\n\nWrite your announcement here, markdown is supported!',
+                          hintStyle: TextStyle(color: darkMode ? Colors.grey : Colors.black54)
                         ),
                       ),
                     ),

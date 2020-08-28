@@ -49,6 +49,7 @@ class _AuthCheckerState extends State<AuthChecker> {
         print("–––––––––––––––––––––––––––––––––––––––––");
         if (value.value["darkMode"] != null && value.value["darkMode"]) {
           setState(() {
+            darkMode = true;
             currBackgroundColor = darkBackgroundColor;
             currCardColor = darkCardColor;
             currDividerColor = darkDividerColor;

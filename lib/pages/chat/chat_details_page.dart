@@ -34,6 +34,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
           usersList.add(new Container(
             child: new InkWell(
               child: new Card(
+                color: currCardColor,
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: new Row(
@@ -55,10 +56,12 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           new Text(
-                              user.firstName + " " + user.lastName
+                            user.firstName + " " + user.lastName,
+                            style: TextStyle(color: currTextColor),
                           ),
                           new Text(
-                              user.email
+                            user.email,
+                            style: TextStyle(color: currTextColor),
                           )
                         ],
                       ),
@@ -77,6 +80,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
           usersList.add(new Container(
             child: new InkWell(
               child: new Card(
+                color: currCardColor,
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: new Row(
@@ -98,10 +102,12 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           new Text(
-                              user.firstName + " " + user.lastName
+                            user.firstName + " " + user.lastName,
+                            style: TextStyle(color: currTextColor),
                           ),
                           new Text(
-                              user.email
+                            user.email,
+                            style: TextStyle(color: currTextColor),
                           )
                         ],
                       ),
@@ -120,6 +126,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
           usersList.add(new Container(
             child: new InkWell(
               child: new Card(
+                color: currCardColor,
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: new Row(
@@ -141,10 +148,12 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           new Text(
-                              user.firstName + " " + user.lastName
+                            user.firstName + " " + user.lastName,
+                            style: TextStyle(color: currTextColor),
                           ),
                           new Text(
-                              user.email
+                            user.email,
+                            style: TextStyle(color: currTextColor),
                           )
                         ],
                       ),

@@ -125,6 +125,20 @@ class _RegisterPageState extends State<RegisterPage> {
           currUser.userID = fb.FirebaseAuth.instance.currentUser.uid;
           FirebaseDatabase.instance.reference().child("users").child(currUser.userID).once().then((value) {
             currUser = new User.fromSnapshot(value);
+            print("––––––––––––– DEBUG INFO ––––––––––––––––");
+            print("NAME: ${currUser.firstName} ${currUser.lastName}");
+            print("EMAIL: ${currUser.email}");
+            print("ROLE: ${currUser.roles.toString()}");
+            print("–––––––––––––––––––––––––––––––––––––––––");
+            if (value.value["darkMode"] != null && value.value["darkMode"]) {
+              setState(() {
+                darkMode = true;
+                currBackgroundColor = darkBackgroundColor;
+                currCardColor = darkCardColor;
+                currDividerColor = darkDividerColor;
+                currTextColor = darkTextColor;
+              });
+            }
           });
           router.navigateTo(context, "/home", transition: TransitionType.fadeIn, clearStack: true);
         });

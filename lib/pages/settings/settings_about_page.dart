@@ -69,16 +69,16 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
                         child: new Text("device".toUpperCase(), style: TextStyle(color: mainColor, fontSize: 18, fontFamily: "Montserrat", fontWeight: FontWeight.bold),),
                       ),
                       new ListTile(
-                        title: new Text("App Version", style: TextStyle(fontSize: 17.0)),
-                        trailing: new Text("$appVersion$appStatus", style: TextStyle(fontSize: 17.0)),
+                        title: new Text("App Version", style: TextStyle(color: currTextColor, fontSize: 17.0)),
+                        trailing: new Text("$appVersion$appStatus", style: TextStyle(color: currTextColor, fontSize: 17.0)),
                       ),
                       new ListTile(
-                        title: new Text("Device Name", style: TextStyle(fontSize: 17.0)),
-                        trailing: new Text("$deviceName", style: TextStyle(fontSize: 17.0)),
+                        title: new Text("Device Name", style: TextStyle(color: currTextColor, fontSize: 17.0)),
+                        trailing: new Text("$deviceName", style: TextStyle(color: currTextColor, fontSize: 17.0)),
                       ),
                       new ListTile(
-                        title: new Text("Platform", style: TextStyle(fontSize: 17.0)),
-                        trailing: new Text("$devicePlatform", style: TextStyle(fontSize: 17.0)),
+                        title: new Text("Platform", style: TextStyle(color: currTextColor, fontSize: 17.0)),
+                        trailing: new Text("$devicePlatform", style: TextStyle(color: currTextColor, fontSize: 17.0)),
                       ),
                     ],
                   ),
@@ -92,16 +92,24 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
                         child: new Text("credits".toUpperCase(), style: TextStyle(color: mainColor, fontSize: 18, fontFamily: "Montserrat", fontWeight: FontWeight.bold),),
                       ),
                       new ListTile(
-                        title: new Text("Bharat Kathi", style: TextStyle(fontSize: 17,)),
-                        subtitle: new Text("App Development", style: TextStyle()),
+                        title: new Text("Bharat Kathi", style: TextStyle(color: currTextColor, fontSize: 17,)),
+                        subtitle: new Text("App Development", style: TextStyle(color: Colors.grey)),
                         onTap: () {
                           const url = 'https://www.instagram.com/bk1031_official';
                           launch(url);
                         },
                       ),
                       new ListTile(
-                        title: new Text("Myron Chan", style: TextStyle(fontSize: 17)),
-                        subtitle: new Text("App Design", style: TextStyle()),
+                        title: new Text("Jennifer Song", style: TextStyle(color: currTextColor, fontSize: 17,)),
+                        subtitle: new Text("App Development", style: TextStyle(color: Colors.grey)),
+                        onTap: () {
+                          const url = 'https://www.instagram.com/jenyfur_soong/';
+                          launch(url);
+                        },
+                      ),
+                      new ListTile(
+                        title: new Text("Myron Chan", style: TextStyle(color: currTextColor, fontSize: 17)),
+                        subtitle: new Text("App Design", style: TextStyle(color: Colors.grey)),
                         onTap: () {
                           const url = 'https://www.instagram.com/myronchan_/';
                           launch(url);
@@ -119,14 +127,14 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
                         child: new Text("contributing".toUpperCase(), style: TextStyle(color: mainColor, fontSize: 17, fontFamily: "Montserrat", fontWeight: FontWeight.bold),),
                       ),
                       new ListTile(
-                        title: new Text("View on GitHub", style: TextStyle(fontSize: 17,)),
+                        title: new Text("View on GitHub", style: TextStyle(color: currTextColor, fontSize: 17,)),
                         trailing: new Icon(Icons.arrow_forward_ios, color: mainColor),
                         onTap: () {
                           launchContributeUrl();
                         },
                       ),
                       new ListTile(
-                        title: new Text("Contributing Guidelines", style: TextStyle(fontSize: 17,)),
+                        title: new Text("Contributing Guidelines", style: TextStyle(color: currTextColor, fontSize: 17,)),
                         trailing: new Icon(Icons.arrow_forward_ios, color: mainColor),
                         onTap: () {
                           launchGuidelinesUrl();

@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getAnnouncements();
     updateUserGroups();
   }
 
@@ -49,6 +50,44 @@ class _HomePageState extends State<HomePage> {
           ],
         )
     );
+  }
+
+  void getAnnouncements() {
+    print(DateTime.now());
+    // Get Chapter announcements
+    FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("announcements").onChildAdded.listen((event) {
+      Announcement announcement = new Announcement.fromSnapshot(event.snapshot);
+      for (int i = 0; i < currUser.roles.length; i++) {
+        if (announcement.topics.contains(currUser.roles[i])) {
+          FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("announcements").child(event.snapshot.key).once().then((value) {
+            setState(() {
+              announcementList.add(announcement);
+            });
+            if (value.value == null) {
+              unreadAnnounce++;
+            }
+          });
+          break;
+        }
+      };
+    });
+    // Get official announcements
+    FirebaseDatabase.instance.reference().child("announcements").onChildAdded.listen((event) {
+      Announcement announcement = new Announcement.fromSnapshot(event.snapshot);
+      for (int i = 0; i < currUser.roles.length; i++) {
+        if (announcement.topics.contains(currUser.roles[i])) {
+          FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("announcements").child(event.snapshot.key).once().then((value) {
+            setState(() {
+              announcementList.add(announcement);
+            });
+            if (value.value == null) {
+              unreadAnnounce++;
+            }
+          });
+          break;
+        }
+      };
+    });
   }
 
   void updateUserGroups() {
@@ -117,7 +156,43 @@ class _HomePageState extends State<HomePage> {
                 "Welcome back, ${currUser.firstName}",
                 style: TextStyle(fontFamily: "Montserrat", fontSize: 35, fontWeight: FontWeight.bold, color: currTextColor),
               ),
-              new Padding(padding: EdgeInsets.all(16)),
+              new Padding(padding: EdgeInsets.all(8)),
+              new Visibility(
+                visible: unreadAnnounce > 0,
+                child: new Container(
+                  width: double.infinity,
+                  height: 100.0,
+                  child: new Row(
+                    children: <Widget>[
+                      new Expanded(
+                        child: new Card(
+                          shape: new RoundedRectangleBorder(borderRadius: BorderRadius.circular(4), side: new BorderSide(color: mainColor, width: 2.0)),
+                          elevation: 2.0,
+                          color: currCardColor,
+                          child: new InkWell(
+                            onTap: () {
+                              router.navigateTo(context, '/home/announcements', transition: TransitionType.fadeIn);
+                            },
+                            child: new Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                new Text(
+                                  unreadAnnounce > 0 ? unreadAnnounce.toString() : announcementList.length.toString(),
+                                  style: TextStyle(fontSize: 35.0, color: unreadAnnounce > 0 ? mainColor : Colors.grey),
+                                ),
+                                new Text(
+                                  unreadAnnounce > 0 ? "New Announcements" : "Announcements",
+                                  style: TextStyle(fontSize: 13.0, color: unreadAnnounce > 0 ? mainColor : currTextColor),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
               new Container(
                 width: double.infinity,
                 height: 100.0,

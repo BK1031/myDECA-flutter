@@ -118,33 +118,39 @@ class _AuthCheckerState extends State<AuthChecker> {
         body: Container(
           padding: EdgeInsets.only(bottom: 32.0, left: 16.0, right: 16.0, top: 32.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Image.asset(
-                'images/deca-logo.png',
-              ),
-              new Text(
-                "Server Connection Error",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Colors.red,
-                  fontFamily: "Montserrat",
-                  decoration: TextDecoration.none,
-                  fontSize: 35.0,
+              new Container(
+                child: Image.asset(
+                  'images/deca-logo.png',
                 ),
               ),
-              new Padding(padding: EdgeInsets.all(16.0)),
-              new Text(
-                "We encountered a problem when trying to connect you to our servers. This page will automatically disappear if a connection with the server is established.\n\nTroubleshooting Tips:\n- Check your wireless connection\n- Restart the myDECA app\n- Restart your device",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    color: Colors.black,
-                    decoration: TextDecoration.none,
-                    fontSize: 17.0,
-                    fontFamily: "Product Sans",
-                    fontWeight: FontWeight.normal
-                ),
-              ),
+              new Column(
+                children: [
+                  new Text(
+                    "Server Connection Error",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontFamily: "Montserrat",
+                      decoration: TextDecoration.none,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 35.0,
+                    ),
+                  ),
+                  new Padding(padding: EdgeInsets.all(8.0)),
+                  new Text(
+                    "We encountered a problem when trying to connect you to our servers. This page will automatically disappear if a connection with the server is established.\n\nTroubleshooting Tips:\n- Check your wireless connection\n- Restart the myDECA app\n- Restart your device",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        color: Colors.black,
+                        decoration: TextDecoration.none,
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.normal
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

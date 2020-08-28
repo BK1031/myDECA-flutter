@@ -48,7 +48,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       ),
                       new FlatButton(
                         child: new Text("View Profile"),
-                        textColor: Colors.grey,
+                        textColor: Colors.white.withOpacity(0.6),
                         onPressed: () {
 
                         },

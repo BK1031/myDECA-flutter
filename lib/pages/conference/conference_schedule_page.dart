@@ -55,6 +55,7 @@ class _ConferenceSchedulePageState extends State<ConferenceSchedulePage> {
                             style: TextStyle(
                               fontSize: 17.0,
                               fontWeight: FontWeight.normal,
+                              color: currTextColor
                             ),
                           ),
                         ),

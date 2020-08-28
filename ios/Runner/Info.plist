@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo Library access is required to upload media or send images in chat.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone access is required to upload media or send videos in chat.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is required to upload media or send images in chat.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

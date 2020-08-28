@@ -5,9 +5,14 @@ import 'package:mydeca_flutter/pages/announcement/announcement_details_page.dart
 import 'package:mydeca_flutter/pages/announcement/announcement_page.dart';
 import 'package:mydeca_flutter/pages/announcement/new_announcement_page.dart';
 import 'package:mydeca_flutter/pages/auth/register_page.dart';
+import 'package:mydeca_flutter/pages/chat/chat_details_page.dart';
+import 'package:mydeca_flutter/pages/chat/chat_page.dart';
+import 'package:mydeca_flutter/pages/chat/chat_view_page.dart';
 import 'package:mydeca_flutter/pages/conference/conference_details_page.dart';
 import 'package:mydeca_flutter/pages/conference/conference_page.dart';
 import 'package:mydeca_flutter/pages/home/home_page.dart';
+import 'package:mydeca_flutter/pages/settings/settings_about_page.dart';
+import 'package:mydeca_flutter/pages/settings/settings_page.dart';
 import 'package:mydeca_flutter/pages/startup/auth_checker.dart';
 import 'package:mydeca_flutter/pages/startup/onboarding_page.dart';
 import 'package:mydeca_flutter/utils/config.dart';
@@ -65,11 +70,34 @@ Future<Null> main() async {
     return new ConferenceDetailsPage();
   }));
 
+  // EVENT ROUTES
+  router.define('/events', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new ConferencePage();
+  }));
+
+  // CHAT ROUTES
+  router.define('/chat', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new ChatPage();
+  }));
+  router.define('/chat/view', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new ChatViewPage();
+  }));
+  router.define('/chat/details', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new ChatDetailsPage();
+  }));
+
+  // SETTINGS ROUTES
+  router.define('/settings', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new SettingsPage();
+  }));
+  router.define('/settings/about', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new SettingsAboutPage();
+  }));
+
   runApp(new MaterialApp(
     title: "VC DECA",
     home: AuthChecker(),
     onGenerateRoute: router.generator,
-    navigatorObservers: <NavigatorObserver>[routeObserver],
     debugShowCheckedModeBanner: false,
     theme: mainTheme,
   ));

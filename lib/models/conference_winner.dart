@@ -1,10 +1,10 @@
 import 'package:firebase_database/firebase_database.dart';
 
 class ConferenceWinner {
-  String key;
-  String name;
-  String event;
-  String award;
+  String key = "";
+  String name = "";
+  String event = "";
+  String award = "";
 
   ConferenceWinner(this.name, this.event, this.award);
 

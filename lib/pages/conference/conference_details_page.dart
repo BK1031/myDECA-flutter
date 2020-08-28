@@ -69,6 +69,7 @@ class _ConferenceDetailsPageState extends State<ConferenceDetailsPage> {
             ];
           },
           body: Container(
+            color: currBackgroundColor,
               child: new Expanded(
                 child: new TabBarView(
                   children: [
@@ -100,6 +101,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container(
+      color: currBackgroundColor,
       padding: EdgeInsets.only(left: 4, top: 4, right: 4),
       child: Card(
         color: mainColor,

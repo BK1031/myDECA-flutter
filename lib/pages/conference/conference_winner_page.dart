@@ -58,6 +58,7 @@ class _ConferenceWinnersPageState extends State<ConferenceWinnersPage> {
                             style: TextStyle(
                               fontSize: 17.0,
                               fontWeight: FontWeight.normal,
+                              color: currTextColor
                             ),
                           ),
                         ),

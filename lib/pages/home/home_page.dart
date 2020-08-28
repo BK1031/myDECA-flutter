@@ -7,9 +7,12 @@ import 'package:mydeca_flutter/models/announcement.dart';
 import 'package:mydeca_flutter/models/user.dart';
 import 'package:mydeca_flutter/pages/app_drawer.dart';
 import 'package:mydeca_flutter/pages/home/join_group_dialog.dart';
+import 'package:mydeca_flutter/pages/home/welcome_dialog.dart';
 import 'package:mydeca_flutter/utils/config.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
 import 'package:http/http.dart' as http;
+
+import 'advisor/advisor_conference_select.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getAnnouncements();
     updateUserGroups();
+    getAdvisorInfo();
   }
 
   void alert(String alert) {
@@ -96,6 +100,9 @@ class _HomePageState extends State<HomePage> {
         groupsWidgetList.clear();
         currUser = User.fromSnapshot(value.snapshot);
       });
+      if (!currUser.emailVerified) {
+        welcomeDialog();
+      }
       for (int i = 0; i < currUser.groups.length; i++) {
         print(currUser.groups[i]);
         FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").child(currUser.groups[i]).child("name").once().then((value) {
@@ -113,6 +120,80 @@ class _HomePageState extends State<HomePage> {
         });
       }
     });
+  }
+
+  void getAdvisorInfo() {
+    if (currUser.roles.contains("Developer") || currUser.roles.contains("Advisor")) {
+      FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("conferences").onValue.listen((event) {
+        print("value");
+        updateSelectedConferences();
+      });
+    }
+    else {
+      print("Not authorized");
+    }
+  }
+
+  void updateSelectedConferences() {
+    setState(() {
+      conferenceWidgetList.clear();
+    });
+    FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("conferences").onChildAdded.listen((event) {
+      print("${event.snapshot.key} – ${event.snapshot.value["enabled"]}");
+      if (event.snapshot.value["enabled"]) {
+        FirebaseDatabase.instance.reference().child("conferences").child(event.snapshot.key).child("past").once().then((value) {
+          if (value.value) {
+            print("Event has already past");
+          }
+          else {
+            setState(() {
+              conferenceWidgetList.add(new Card(
+                color: mainColor,
+                child: new Container(
+                  padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
+                  child: new Text(event.snapshot.key, style: TextStyle(color: Colors.white),),
+                ),
+              ));
+            });
+          }
+        });
+      }
+    });
+  }
+
+  void welcomeDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Welcome to myDECA!", style: TextStyle(color: currTextColor),),
+            backgroundColor: currBackgroundColor,
+            content: new WelcomeDialog(),
+          );
+        }
+    );
+  }
+
+  void selectConferenceDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Select Conferences", style: TextStyle(color: currTextColor),),
+            backgroundColor: currCardColor,
+            content: new AdvisorConferenceSelect(),
+            actions: [
+              new FlatButton(
+                child: new Text("DONE"),
+                onPressed: () {
+                  router.pop(context);
+                },
+              )
+            ],
+          );
+        }
+    );
   }
 
   void selectGroupDialog() {
@@ -362,6 +443,153 @@ class _HomePageState extends State<HomePage> {
                       )
                     ],
                   ),
+                ),
+              ),
+              new Padding(padding: EdgeInsets.all(2)),
+              new Padding(padding: EdgeInsets.only(top: 8, bottom: 8), child: new Divider(color: currDividerColor, height: 8)),
+              new Container(
+                width: double.infinity,
+                height: 100.0,
+                child: new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      flex: 5,
+                      child: new Card(
+                        elevation: 2.0,
+                        color: currCardColor,
+                        child: new InkWell(
+                          onTap: () {
+                            selectConferenceDialog();
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(left: 16, right: 16),
+                                child: new Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    new Icon(Icons.event, size: 35.0, color: darkMode ? Colors.grey : Colors.black54),
+                                    new Text(
+                                      "My Conferences",
+                                      style: TextStyle(fontSize: 13.0, color: currTextColor),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              new Expanded(
+                                child: Container(
+                                  child: new Wrap(
+                                    direction: Axis.horizontal,
+                                    children: conferenceWidgetList,
+                                  ),
+                                ),
+                              ),
+                              new Visibility(
+                                visible: conferenceWidgetList.isEmpty,
+                                child: Container(
+                                  child: new Text(
+                                    "No conferences selected for this\nchapter. Click on this card to add\na conference.",
+                                    style: TextStyle(color: currTextColor),
+                                  ),
+                                ),
+                              ),
+                              new Padding(padding: EdgeInsets.all(8))
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              new Padding(padding: EdgeInsets.all(2.0)),
+              new Container(
+                width: double.infinity,
+                height: 100.0,
+                child: new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      flex: 5,
+                      child: new Card(
+                        elevation: 2.0,
+                        color: currCardColor,
+                        child: new InkWell(
+                          onTap: () {
+                            router.navigateTo(context, '/home/handbook/manage', transition: TransitionType.fadeIn);
+                          },
+                          child: new Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              new Icon(Icons.library_books, size: 35.0, color: darkMode ? Colors.grey : Colors.black54),
+                              new Text(
+                                "Manage Handbooks",
+                                style: TextStyle(fontSize: 13.0, color: currTextColor),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    new Padding(padding: EdgeInsets.all(2.0)),
+                    new Expanded(
+                      flex: 3,
+                      child: new Card(
+                        elevation: 2.0,
+                        color: currCardColor,
+                        child: new InkWell(
+                          onTap: () {
+                            router.navigateTo(context, "/home/manage-users", transition: TransitionType.fadeIn);
+                          },
+                          child: new Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              new Icon(Icons.supervised_user_circle, size: 35.0, color: darkMode ? Colors.grey : Colors.black54),
+                              new Text(
+                                "Manage Users",
+                                style: TextStyle(fontSize: 13.0, color: currTextColor),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              new Padding(padding: EdgeInsets.all(2.0)),
+              new Container(
+                width: double.infinity,
+                height: 100.0,
+                child: new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      flex: 3,
+                      child: new Card(
+                        color: currCardColor,
+                        elevation: 2.0,
+                        child: new InkWell(
+                          onTap: () {
+                            router.navigateTo(context, '/home/notification-manager', transition: TransitionType.native);
+                          },
+                          child: new Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              new Icon(Icons.notifications_active, size: 35.0, color: darkMode ? Colors.grey : Colors.black54,),
+                              new Text(
+                                "Send Notification",
+                                style: TextStyle(fontSize: 13.0, color: currTextColor),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    new Padding(padding: EdgeInsets.all(2.0)),
+                    new Expanded(
+                      flex: 5,
+                      child: new Card(),
+                    )
+                  ],
                 ),
               ),
               new Padding(padding: EdgeInsets.all(16))

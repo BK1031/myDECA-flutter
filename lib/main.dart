@@ -10,6 +10,9 @@ import 'package:mydeca_flutter/pages/chat/chat_page.dart';
 import 'package:mydeca_flutter/pages/chat/chat_view_page.dart';
 import 'package:mydeca_flutter/pages/conference/conference_details_page.dart';
 import 'package:mydeca_flutter/pages/conference/conference_page.dart';
+import 'package:mydeca_flutter/pages/home/advisor/manage_handbook_page.dart';
+import 'package:mydeca_flutter/pages/home/advisor/manage_user_page.dart';
+import 'package:mydeca_flutter/pages/home/handbook_page.dart';
 import 'package:mydeca_flutter/pages/home/home_page.dart';
 import 'package:mydeca_flutter/pages/settings/settings_about_page.dart';
 import 'package:mydeca_flutter/pages/settings/settings_page.dart';
@@ -49,6 +52,20 @@ Future<Null> main() async {
   // HOME ROUTES
   router.define('/home', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
     return new HomePage();
+  }));
+  router.define('/home/manage-users', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new ManageUserPage();
+  }));
+  router.define('/home/notification-manager', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new HomePage();
+  }));
+
+  // HANDBOOK ROUTES
+  router.define('/home/handbook', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new HandbookPage();
+  }));
+  router.define('/home/handbook/manage', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new ManageHandbookPage();
   }));
 
   // ANNOUNCEMENT ROUTES

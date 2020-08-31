@@ -426,7 +426,7 @@ class _HomePageState extends State<HomePage> {
                           color: currCardColor,
                           child: new InkWell(
                             onTap: () {
-                              router.navigateTo(context, "/home/manage-users", transition: TransitionType.fadeIn);
+                              router.navigateTo(context, "/home/manage-users", transition: TransitionType.native);
                             },
                             child: new Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -538,7 +538,7 @@ class _HomePageState extends State<HomePage> {
                         color: currCardColor,
                         child: new InkWell(
                           onTap: () {
-                            router.navigateTo(context, "/home/manage-users", transition: TransitionType.fadeIn);
+                            router.navigateTo(context, "/home/manage-users", transition: TransitionType.native);
                           },
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

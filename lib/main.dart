@@ -12,7 +12,7 @@ import 'package:mydeca_flutter/pages/conference/conference_details_page.dart';
 import 'package:mydeca_flutter/pages/conference/conference_page.dart';
 import 'package:mydeca_flutter/pages/home/advisor/manage_handbook_page.dart';
 import 'package:mydeca_flutter/pages/home/advisor/manage_user_page.dart';
-import 'package:mydeca_flutter/pages/home/handbook_page.dart';
+import 'package:mydeca_flutter/pages/home/handbook/handbook_page.dart';
 import 'package:mydeca_flutter/pages/home/home_page.dart';
 import 'package:mydeca_flutter/pages/settings/settings_about_page.dart';
 import 'package:mydeca_flutter/pages/settings/settings_page.dart';
@@ -62,6 +62,9 @@ Future<Null> main() async {
 
   // HANDBOOK ROUTES
   router.define('/home/handbook', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new HandbookPage();
+  }));
+  router.define('/home/handbook/details', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
     return new HandbookPage();
   }));
   router.define('/home/handbook/manage', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {

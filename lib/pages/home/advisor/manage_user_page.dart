@@ -66,9 +66,7 @@ class _ManageUserPageState extends State<ManageUserPage> {
   void initState() {
     super.initState();
     FirebaseDatabase.instance.reference().child("users").onValue.listen((event) {
-      setState(() {
-        usersWidgetList.clear();
-      });
+      print("rebuilding users");
       updateUsers();
     });
     FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").onValue.listen((event) {

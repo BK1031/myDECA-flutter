@@ -41,8 +41,8 @@ class _HomePageState extends State<HomePage> {
         context: context,
         child: new AlertDialog(
           backgroundColor: currCardColor,
-          title: new Text("Alert"),
-          content: new Text(alert),
+          title: new Text("Alert", style: TextStyle(color: currTextColor),),
+          content: new Text(alert, style: TextStyle(color: currTextColor)),
           actions: [
             new FlatButton(
                 child: new Text("GOT IT"),
@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                           color: currCardColor,
                           child: new InkWell(
                             onTap: () {
-                              router.navigateTo(context, '/home/announcements', transition: TransitionType.fadeIn);
+                              router.navigateTo(context, '/home/announcements', transition: TransitionType.native);
                             },
                             child: new Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -309,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                         child: new InkWell(
                           onTap: () {
                             if (currUser.groups.isNotEmpty) {
-                              router.navigateTo(context, '/home/handbook', transition: TransitionType.fadeIn);
+                              router.navigateTo(context, '/home/handbook', transition: TransitionType.native);
                             }
                             else {
                               alert("You are not a part of any groups. Please join a group to get access to your handbook.");
@@ -515,7 +515,7 @@ class _HomePageState extends State<HomePage> {
                         color: currCardColor,
                         child: new InkWell(
                           onTap: () {
-                            router.navigateTo(context, '/home/handbook/manage', transition: TransitionType.fadeIn);
+                            router.navigateTo(context, '/home/handbook/manage', transition: TransitionType.native);
                           },
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

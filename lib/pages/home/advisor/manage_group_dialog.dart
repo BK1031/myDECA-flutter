@@ -167,8 +167,10 @@ class _ManageGroupDialogState extends State<ManageGroupDialog> {
               new AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 height: height,
-                child: new Column(
-                  children: handbookWidgetList,
+                child: new SingleChildScrollView(
+                  child: new Column(
+                    children: handbookWidgetList,
+                  ),
                 ),
               ),
               new Padding(padding: EdgeInsets.all(8)),

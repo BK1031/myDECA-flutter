@@ -83,12 +83,12 @@ class _ChatViewPageState extends State<ChatViewPage> {
 
                 },
                 child: new Container(
-                  padding: EdgeInsets.only(top: 8, right: 8),
+                  padding: EdgeInsets.only(left: 12, right: 16),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      new Container(width: 72),
+                      new Container(width: 58),
                       new Expanded(
                         child: new Linkify(
                           text: message.message,
@@ -110,7 +110,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
 
                 },
                 child: new Container(
-                  padding: EdgeInsets.only(left: 16, top: 8, right: 8),
+                  padding: EdgeInsets.only(left: 12, top: 8, right: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,12 +163,12 @@ class _ChatViewPageState extends State<ChatViewPage> {
 
                 },
                 child: new Container(
-                  padding: EdgeInsets.only(top: 8, right: 8),
+                  padding: EdgeInsets.only(left: 12, right: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      new Container(width: 72),
+                      new Container(width: 58),
                       new Expanded(
                         child: new ClipRRect(
                           borderRadius: BorderRadius.circular(2.0),
@@ -188,7 +188,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
 
                 },
                 child: new Container(
-                  padding: EdgeInsets.only(left: 16, top: 8, right: 8),
+                  padding: EdgeInsets.only(left: 12, top: 8, right: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,

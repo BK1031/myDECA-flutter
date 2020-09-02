@@ -112,6 +112,7 @@ class _ConferenceOverviewPageState extends State<ConferenceOverviewPage> {
                 ],
               )
           ),
+          // new Container(height: 50,),
           InkWell(
             onTap: () {
               print(conference.hotelMapUrl);

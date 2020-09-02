@@ -10,6 +10,10 @@ import 'package:mydeca_flutter/pages/chat/chat_page.dart';
 import 'package:mydeca_flutter/pages/chat/chat_view_page.dart';
 import 'package:mydeca_flutter/pages/conference/conference_details_page.dart';
 import 'package:mydeca_flutter/pages/conference/conference_page.dart';
+import 'package:mydeca_flutter/pages/event/event_cluster_page.dart';
+import 'package:mydeca_flutter/pages/event/event_details_page.dart';
+import 'package:mydeca_flutter/pages/event/event_type_page.dart';
+import 'package:mydeca_flutter/pages/event/events_page.dart';
 import 'package:mydeca_flutter/pages/home/advisor/manage_handbook_page.dart';
 import 'package:mydeca_flutter/pages/home/advisor/manage_user_page.dart';
 import 'package:mydeca_flutter/pages/home/handbook/handbook_page.dart';
@@ -92,7 +96,16 @@ Future<Null> main() async {
 
   // EVENT ROUTES
   router.define('/events', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-    return new ConferencePage();
+    return new EventPage();
+  }));
+  router.define('/events/type', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new EventTypePage();
+  }));
+  router.define('/events/type/cluster', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new EventClusterPage();
+  }));
+  router.define('/events/type/cluster/details', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new EventDetailsPage();
   }));
 
   // CHAT ROUTES

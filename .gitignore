@@ -2,6 +2,8 @@ lib/utils/service_account.dart
 ios/Runner/GoogleService-Info.plist
 android/app/google-services.json
 
+pubspec.lock
+
 # Miscellaneous
 *.class
 *.log

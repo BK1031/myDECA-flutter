@@ -83,7 +83,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
 
                 },
                 child: new Container(
-                  padding: EdgeInsets.only(left: 12, right: 16),
+                  padding: EdgeInsets.only(left: 12, right: 15),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -110,7 +110,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
 
                 },
                 child: new Container(
-                  padding: EdgeInsets.only(left: 12, top: 8, right: 16),
+                  padding: EdgeInsets.only(left: 12, top: 8, right: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +163,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
 
                 },
                 child: new Container(
-                  padding: EdgeInsets.only(left: 12, right: 16),
+                  padding: EdgeInsets.only(left: 12, right: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +188,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
 
                 },
                 child: new Container(
-                  padding: EdgeInsets.only(left: 12, top: 8, right: 16),
+                  padding: EdgeInsets.only(left: 12, top: 8, right: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,

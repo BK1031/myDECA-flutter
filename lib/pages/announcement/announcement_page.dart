@@ -130,6 +130,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
       for (int i = 0; i < announcementList.length; i++) {
         if (readAnnounceIds.contains(announcementList[i].announcementID)) unreadAnnounce--;
         announcementWidgetList.add(Container(
+          padding: EdgeInsets.only(bottom: 8),
           child: new Card(
             color: currCardColor,
             child: new InkWell(
@@ -266,6 +267,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                   child: new Text("Nothing to see here!\nCheck back later for more announcements.", textAlign: TextAlign.center, style: TextStyle(fontSize: 17, color: currTextColor),)
               ),
               Container(
+                padding: EdgeInsets.only(top: 8),
                 child: new Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: announcementWidgetList,

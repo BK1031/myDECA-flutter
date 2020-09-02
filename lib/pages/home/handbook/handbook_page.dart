@@ -77,7 +77,13 @@ class _HandbookPageState extends State<HandbookPage> {
                       await FirebaseDatabase.instance.reference().child("users").child(value.value["checkedBy"]).once().then((value2) {
                         User checkedBy = new User.fromSnapshot(value2);
                         taskList.add(new ExpansionTile(
-                          leading: Icon(Icons.check_box, color: mainColor),
+                          leading: new InkWell(
+                            child: Icon(Icons.check_box, color: mainColor),
+                            onTap: () {
+                              FirebaseDatabase.instance.reference().child("users").child(user.userID).child("handbooks").child(handbookID).child(i.toString()).remove();
+                              updateHandbookView();
+                            },
+                          ),
                           title: new Text(handbook.tasks[i], style: TextStyle(color: currTextColor),),
                           children: [
                             Container(
@@ -116,6 +122,13 @@ class _HandbookPageState extends State<HandbookPage> {
                     else {
                       taskList.add(
                           new ListTile(
+                            onTap: () {
+                              FirebaseDatabase.instance.reference().child("users").child(user.userID).child("handbooks").child(handbookID).child(i.toString()).set({
+                                "checkedBy" : currUser.userID,
+                                "date": DateTime.now().toString()
+                              });
+                              updateHandbookView();
+                            },
                             leading: Icon(Icons.check_box_outline_blank, color: darkMode ? Colors.grey : Colors.black54),
                             title: new Text(handbook.tasks[i], style: TextStyle(color: currTextColor),),
                           )

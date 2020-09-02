@@ -16,6 +16,7 @@ import 'package:mydeca_flutter/pages/event/event_type_page.dart';
 import 'package:mydeca_flutter/pages/event/events_page.dart';
 import 'package:mydeca_flutter/pages/home/advisor/manage_handbook_page.dart';
 import 'package:mydeca_flutter/pages/home/advisor/manage_user_page.dart';
+import 'package:mydeca_flutter/pages/home/advisor/send_notification_page.dart';
 import 'package:mydeca_flutter/pages/home/handbook/handbook_page.dart';
 import 'package:mydeca_flutter/pages/home/home_page.dart';
 import 'package:mydeca_flutter/pages/settings/settings_about_page.dart';
@@ -61,7 +62,7 @@ Future<Null> main() async {
     return new ManageUserPage();
   }));
   router.define('/home/notification-manager', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-    return new HomePage();
+    return new SendNotificationPage();
   }));
 
   // HANDBOOK ROUTES

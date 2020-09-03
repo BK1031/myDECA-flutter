@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:mydeca_flutter/pages/home/advisor/manage_user_page.dart';
 import 'package:mydeca_flutter/pages/home/advisor/send_notification_page.dart';
 import 'package:mydeca_flutter/pages/home/handbook/handbook_page.dart';
 import 'package:mydeca_flutter/pages/home/home_page.dart';
+import 'package:mydeca_flutter/pages/settings/profile_page.dart';
 import 'package:mydeca_flutter/pages/settings/settings_about_page.dart';
 import 'package:mydeca_flutter/pages/settings/settings_page.dart';
 import 'package:mydeca_flutter/pages/startup/auth_checker.dart';
@@ -27,7 +29,10 @@ import 'package:mydeca_flutter/utils/config.dart';
 import 'package:mydeca_flutter/utils/service_account.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
 
+FirebaseAnalytics analytics;
+
 Future<Null> main() async {
+  analytics = FirebaseAnalytics();
   WidgetsFlutterBinding.ensureInitialized();
   ErrorWidget.builder = (FlutterErrorDetails details) => Container(
     color: Colors.red.withOpacity(0.6),
@@ -126,6 +131,9 @@ Future<Null> main() async {
   }));
   router.define('/settings/about', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
     return new SettingsAboutPage();
+  }));
+  router.define('/profile', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    return new ProfilePage();
   }));
 
   runApp(new MaterialApp(

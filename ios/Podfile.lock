@@ -1,7 +1,12 @@
 PODS:
+  - Firebase/Analytics (6.26.0):
+    - Firebase/Core
   - Firebase/Auth (6.26.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 6.5.3)
+  - Firebase/Core (6.26.0):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 6.6.0)
   - Firebase/CoreOnly (6.26.0):
     - FirebaseCore (= 6.7.2)
   - Firebase/Database (6.26.0):
@@ -13,6 +18,11 @@ PODS:
   - Firebase/Storage (6.26.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 3.6.1)
+  - firebase_analytics (6.0.0):
+    - Firebase/Analytics (~> 6.26.0)
+    - Firebase/CoreOnly (~> 6.26.0)
+    - firebase_core
+    - Flutter
   - firebase_auth (0.18.0):
     - Firebase/Auth (~> 6.26.0)
     - Firebase/CoreOnly (~> 6.26.0)
@@ -36,6 +46,15 @@ PODS:
     - Firebase/Storage (~> 6.26.0)
     - firebase_core
     - Flutter
+  - FirebaseAnalytics (6.6.0):
+    - FirebaseCore (~> 6.7)
+    - FirebaseInstallations (~> 1.3)
+    - GoogleAppMeasurement (= 6.6.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 1.30905.0)
   - FirebaseAnalyticsInterop (1.5.0)
   - FirebaseAuth (6.5.3):
     - FirebaseAuthInterop (~> 1.0)
@@ -88,6 +107,12 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - GoogleAppMeasurement (6.6.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 1.30905.0)
   - GoogleDataTransport (7.2.0):
     - nanopb (~> 1.30905.0)
   - GoogleUtilities/AppDelegateSwizzler (6.7.2):
@@ -98,6 +123,8 @@ PODS:
     - PromisesObjC (~> 1.2)
   - GoogleUtilities/Logger (6.7.2):
     - GoogleUtilities/Environment
+  - GoogleUtilities/MethodSwizzler (6.7.2):
+    - GoogleUtilities/Logger
   - GoogleUtilities/Network (6.7.2):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
@@ -108,6 +135,9 @@ PODS:
   - GoogleUtilities/UserDefaults (6.7.2):
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.4.0)
+  - image_cropper (0.0.3):
+    - Flutter
+    - TOCropViewController (~> 2.5.4)
   - image_picker (0.0.1):
     - Flutter
   - leveldb-library (1.22)
@@ -123,6 +153,7 @@ PODS:
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
+  - TOCropViewController (2.5.4)
   - url_launcher (0.0.1):
     - Flutter
   - video_player (0.0.1):
@@ -131,6 +162,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
@@ -138,6 +170,7 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
   - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
+  - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
@@ -148,6 +181,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Firebase
+    - FirebaseAnalytics
     - FirebaseAnalyticsInterop
     - FirebaseAuth
     - FirebaseAuthInterop
@@ -160,6 +194,7 @@ SPEC REPOS:
     - FirebaseMessaging
     - FirebaseStorage
     - FMDB
+    - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
     - GTMSessionFetcher
@@ -167,8 +202,11 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - Protobuf
+    - TOCropViewController
 
 EXTERNAL SOURCES:
+  firebase_analytics:
+    :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -183,6 +221,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_webview_plugin:
     :path: ".symlinks/plugins/flutter_webview_plugin/ios"
+  image_cropper:
+    :path: ".symlinks/plugins/image_cropper/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   path_provider:
@@ -198,11 +238,13 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Firebase: 7cf5f9c67f03cb3b606d1d6535286e1080e57eb6
+  firebase_analytics: 3ad65aa7be059752b2c1a6392bfafe030b4ab9fa
   firebase_auth: fcb8cb081751c7f96d9c069a2b5c83226d166e6a
   firebase_core: 3134fe79d257d430f163b558caf52a10a87efe8a
   firebase_database: a45844f55a7881e37d1a5dc61cccc214731a4643
   firebase_messaging: 6061cbdfe4463502a0d4d7049820c25d1757a095
   firebase_storage: 760ea52570d1896e3b08e2815f1123e61f25e685
+  FirebaseAnalytics: 96634d356482d4f3af8fe459a0ebf19a99c71b75
   FirebaseAnalyticsInterop: 3f86269c38ae41f47afeb43ebf32a001f58fcdae
   FirebaseAuth: 7047aec89c0b17ecd924a550c853f0c27ac6015e
   FirebaseAuthInterop: a0f37ae05833af156e72028f648d313f7e7592e9
@@ -217,9 +259,11 @@ SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_webview_plugin: ed9e8a6a96baf0c867e90e1bce2673913eeac694
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  GoogleAppMeasurement: 67458367830514fb20fd9e233496f1eef9d90185
   GoogleDataTransport: 672fb0ce96fe7f7f31d43672fca62ad2c9c86f7b
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
+  image_cropper: c8f9b4157933c7bb965a66d1c5e6c8fd408c6eb4
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
@@ -227,6 +271,7 @@ SPEC CHECKSUMS:
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
+  TOCropViewController: 2a1ae1242600b1f2d996fd91a5268b2309a33b5c
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96

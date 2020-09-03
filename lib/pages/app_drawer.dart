@@ -50,7 +50,10 @@ class _AppDrawerState extends State<AppDrawer> {
                         child: new Text("View Profile"),
                         textColor: Colors.white.withOpacity(0.6),
                         onPressed: () {
-
+                          router.pop(context);
+                          Future.delayed(const Duration(milliseconds: 100), () {
+                            router.navigateTo(context, "/profile", transition: TransitionType.nativeModal);
+                          });
                         },
                       ),
                     ],

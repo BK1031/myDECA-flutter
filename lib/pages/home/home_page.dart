@@ -1,6 +1,7 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:mydeca_flutter/models/announcement.dart';
@@ -21,6 +22,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   List<Announcement> announcementList = new List();
   int unreadAnnounce = 0;
 
@@ -31,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    firebaseCloudMessagingListeners();
     getAnnouncements();
     updateUserGroups();
     getAdvisorInfo();
@@ -55,6 +59,49 @@ class _HomePageState extends State<HomePage> {
         )
     );
   }
+
+  void firebaseCloudMessagingListeners() {
+    if (Platform.isIOS) iOS_Permission();
+    _firebaseMessaging.getToken().then((token) {
+      print("FCM Token: " + token);
+      FirebaseDatabase.instance.reference().child("users").child(currUser.userID).update({"fcmToken": token});
+    });
+    firebaseSubscibeTopics();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+        if (message["data"]["route"] != null) {
+          router.navigateTo(context, message["data"]["route"], transition: TransitionType.native);
+        }
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+        if (message["data"]["route"] != null) {
+          router.navigateTo(context, message["data"]["route"], transition: TransitionType.native);
+        }
+      },
+    );
+  }
+
+  void firebaseSubscibeTopics() {
+
+  }
+
+//   ignore: non_constant_identifier_names
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true)
+    );
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings)
+    {
+      print("Settings registered: $settings");
+    });
+  }
+
 
   void getAnnouncements() {
     print(DateTime.now());

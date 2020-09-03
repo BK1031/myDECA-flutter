@@ -585,7 +585,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         style: new TextStyle(color: mainColor),
                                         recognizer: new TapGestureRecognizer()
                                           ..onTap = () {
-                                            launch("https://deca.bk1031.dev/terms");
+                                            launch("https://docs.mydeca.org/tos");
                                           },
                                       ),
                                       new TextSpan(
@@ -597,7 +597,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         style: new TextStyle(color: mainColor),
                                         recognizer: new TapGestureRecognizer()
                                           ..onTap = () {
-                                            launch("https://deca.bk1031.dev/terms");
+                                            launch("https://docs.mydeca.org/privacy");
                                           },
                                       ),
                                     ],

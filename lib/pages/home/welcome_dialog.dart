@@ -69,7 +69,7 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
                         color: currCardColor,
                         child: new InkWell(
                           onTap: () {
-                            launch("https://bk1031.gitbook.io/mydeca/user-1/registration");
+                            launch("https://docs.mydeca.org/user-1/registration");
                           },
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

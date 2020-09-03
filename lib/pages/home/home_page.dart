@@ -6,12 +6,14 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:mydeca_flutter/models/announcement.dart';
 import 'package:mydeca_flutter/models/user.dart';
+import 'package:mydeca_flutter/models/version.dart';
 import 'package:mydeca_flutter/pages/app_drawer.dart';
 import 'package:mydeca_flutter/pages/home/join_group_dialog.dart';
 import 'package:mydeca_flutter/pages/home/welcome_dialog.dart';
 import 'package:mydeca_flutter/utils/config.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'advisor/advisor_conference_select.dart';
 
@@ -27,17 +29,43 @@ class _HomePageState extends State<HomePage> {
   List<Announcement> announcementList = new List();
   int unreadAnnounce = 0;
 
+  bool rendered = false;
+
   List<Widget> roleWidgetList = new List();
   List<Widget> conferenceWidgetList = new List();
-  List<Widget> groupsWidgetList = new List();
+  List<Widget> groupWidgetList = new List();
 
   @override
   void initState() {
     super.initState();
-    firebaseCloudMessagingListeners();
-    getAnnouncements();
-    updateUserGroups();
-    getAdvisorInfo();
+    // Get Session Info
+    FirebaseDatabase.instance.reference().child("stableVersion").once().then((DataSnapshot snapshot) {
+      Version stable = Version(snapshot.value);
+      print("Current Version: $appVersion");
+      print("Current Version: ${appVersion.getVersionCode()}");
+      print("Stable Version: ${stable.getVersionCode()}");
+      if (appVersion.getVersionCode() < stable.getVersionCode()) {
+        print("OUTDATED APP!");
+        appStatus = " [OUTDATED]";
+        if (stable.major > appVersion.major) {
+          // Minor Build Outdated
+          print("Force this boi to update");
+          outdatedAlert(true);
+        }
+        else {
+          outdatedAlert(false);
+        }
+      }
+      else if (appVersion.getVersionCode() > stable.getVersionCode()) {
+        print("BETA APP!");
+        appStatus = " Beta ${appVersion.getBuild()}";
+      }
+      FirebaseDatabase.instance.reference().child("users").child(currUser.userID).update({
+        "appVersion": "${appVersion.toString()}$appStatus",
+        "deviceName": Platform.localHostname,
+        "platform": Platform.operatingSystem
+      });
+    });
   }
 
   void alert(String alert) {
@@ -60,8 +88,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void firebaseCloudMessagingListeners() {
+  Future<void> firebaseCloudMessagingListeners() async {
     if (Platform.isIOS) iOS_Permission();
+    _firebaseMessaging.setAutoInitEnabled(true);
     _firebaseMessaging.getToken().then((token) {
       print("FCM Token: " + token);
       FirebaseDatabase.instance.reference().child("users").child(currUser.userID).update({"fcmToken": token});
@@ -73,21 +102,26 @@ class _HomePageState extends State<HomePage> {
       },
       onResume: (Map<String, dynamic> message) async {
         print('on resume $message');
-        if (message["data"]["route"] != null) {
-          router.navigateTo(context, message["data"]["route"], transition: TransitionType.native);
-        }
       },
       onLaunch: (Map<String, dynamic> message) async {
         print('on launch $message');
-        if (message["data"]["route"] != null) {
-          router.navigateTo(context, message["data"]["route"], transition: TransitionType.native);
-        }
       },
     );
   }
 
-  void firebaseSubscibeTopics() {
-
+  Future<void> firebaseSubscibeTopics() async {
+    // Clear existing topics
+    await _firebaseMessaging.deleteInstanceID();
+    currUser.roles.forEach((role) {
+      _firebaseMessaging.subscribeToTopic(role);
+      print("Subscribed to $role");
+      _firebaseMessaging.subscribeToTopic(currUser.chapter.chapterID + "_" + role);
+      print("Subscribed to " + currUser.chapter.chapterID + "_" + role);
+    });
+    currUser.groups.forEach((group) {
+      _firebaseMessaging.subscribeToTopic(currUser.chapter.chapterID + "_" + group);
+      print("Subscribed to " + currUser.chapter.chapterID + "_" + group);
+    });
   }
 
 //   ignore: non_constant_identifier_names
@@ -141,21 +175,23 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void updateUserGroups() {
+  Future<void> updateUserGroups() async {
+    print("UPDATING GROUPS");
     FirebaseDatabase.instance.reference().child("users").child(currUser.userID).onValue.listen((value) {
       setState(() {
-        groupsWidgetList.clear();
         currUser = User.fromSnapshot(value.snapshot);
       });
       if (!currUser.emailVerified) {
         welcomeDialog();
       }
-      for (int i = 0; i < currUser.groups.length; i++) {
-        print(currUser.groups[i]);
-        FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").child(currUser.groups[i]).child("name").once().then((value) {
+      currUser.groups.forEach((element) async {
+        setState(() {
+          groupWidgetList.clear();
+        });
+        await FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").child(element).child("name").once().then((value) {
           if (value.value != null) {
             setState(() {
-              groupsWidgetList.add(new Card(
+              groupWidgetList.add(new Card(
                 color: mainColor,
                 child: new Container(
                   padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
@@ -165,7 +201,7 @@ class _HomePageState extends State<HomePage> {
             });
           }
         });
-      }
+      });
     });
   }
 
@@ -182,6 +218,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void updateSelectedConferences() {
+    print("UPDATING CONFERNECES");
     setState(() {
       conferenceWidgetList.clear();
     });
@@ -264,8 +301,68 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void outdatedAlert(bool major) {
+    if (major) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: new Text("Update Required", style: TextStyle(color: currTextColor),),
+              backgroundColor: currBackgroundColor,
+              content: new Text(
+                "It looks like you are using an outdated version of the myDECA App. Please update your app from the App Store.",
+                style: TextStyle(color: currTextColor)
+              ),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text("GOT IT"),
+                  textColor: mainColor,
+                  onPressed: () {
+                    exit(0);
+                  },
+                ),
+              ],
+            );
+          }
+      );
+    }
+    else {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: new Text("Update Available", style: TextStyle(color: currTextColor),),
+              backgroundColor: currBackgroundColor,
+              content: new Text(
+                "It looks like you are using an outdated version of the myDECA App. Please update your app from the App Store for the best experience.",
+                style: TextStyle(color: currTextColor)
+              ),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text("GOT IT"),
+                  textColor: mainColor,
+                  onPressed: () {
+                    router.pop(context);
+                  },
+                ),
+              ],
+            );
+          }
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (!rendered) {
+      rendered = true;
+      getAnnouncements();
+      updateUserGroups();
+      getAdvisorInfo();
+      firebaseCloudMessagingListeners();
+    }
     return Scaffold(
       appBar: new AppBar(
         title: new Text(
@@ -382,7 +479,6 @@ class _HomePageState extends State<HomePage> {
               new Padding(padding: EdgeInsets.all(2.0)),
               new Container(
                 width: double.infinity,
-                height: 100.0,
                 child: new Row(
                   children: <Widget>[
                     new Expanded(
@@ -395,6 +491,7 @@ class _HomePageState extends State<HomePage> {
                             selectGroupDialog();
                           },
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Container(
                                 padding: EdgeInsets.only(left: 16, right: 16),
@@ -409,16 +506,16 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 ),
                               ),
-                              new Expanded(
-                                child: Container(
-                                  child: new Wrap(
-                                    direction: Axis.horizontal,
-                                    children: groupsWidgetList,
-                                  ),
+                              Container(
+                                padding: EdgeInsets.only(top: 8, bottom: 8),
+                                child: new Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: groupWidgetList
                                 ),
                               ),
                               new Visibility(
-                                visible: groupsWidgetList.isEmpty,
+                                visible: currUser.groups.isEmpty,
                                 child: Container(
                                   child: new Text(
                                     "It looks like you are not part of any\ngroups. Click on this card to join a group.",

@@ -55,6 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
+              new Padding(padding: EdgeInsets.all(4)),
               new Card(
                 color: currCardColor,
                 child: Column(
@@ -74,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: new Text("Help", style: TextStyle(fontSize: 17, color: currTextColor)),
                       trailing: new Icon(Icons.arrow_forward_ios, color: mainColor),
                       onTap: () async {
-                        const url = 'https://bk1031.gitbook.io/mydeca/';
+                        const url = 'https://docs.mydeca.org';
                         if (await canLaunch(url)) {
                           await launch(url);
                         } else {
@@ -108,6 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
+              new Padding(padding: EdgeInsets.all(4)),
               new Card(
                 color: currCardColor,
                 child: Column(
@@ -159,6 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
+              new Padding(padding: EdgeInsets.all(4)),
               new Card(
                 color: currCardColor,
                 child: Column(
@@ -171,7 +174,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: new Text("Provide Feedback", style: TextStyle(fontSize: 17, color: currTextColor)),
                       trailing: new Icon(Icons.arrow_forward_ios, color: mainColor),
                       onTap: () async {
-                        const url = 'https://github.com/BK1031/VC-DECA-flutter/issues';
+                        const url = 'https://forms.gle/8UMH4V5Ty79qFEnNA';
                         if (await canLaunch(url)) {
                           await launch(url);
                         } else {
@@ -183,7 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: new Text("Report a Bug", style: TextStyle(fontSize: 17, color: currTextColor)),
                       trailing: new Icon(Icons.arrow_forward_ios, color: mainColor),
                       onTap: () async {
-                        const url = 'https://github.com/BK1031/VC-DECA-flutter/issues';
+                        const url = 'https://github.com/Equinox-Initiative/myDECA-flutter/issues';
                         if (await canLaunch(url)) {
                           await launch(url);
                         } else {
@@ -194,6 +197,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
+              new Padding(padding: EdgeInsets.all(4)),
               new Visibility(
                 visible: (currUser.roles.contains('Developer')),
                 child: new Column(

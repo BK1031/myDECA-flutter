@@ -83,6 +83,7 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
                     ],
                   ),
                 ),
+                new Padding(padding: EdgeInsets.all(4)),
                 new Card(
                   color: currCardColor,
                   child: Column(
@@ -118,6 +119,7 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
                     ],
                   ),
                 ),
+                new Padding(padding: EdgeInsets.all(4)),
                 new Card(
                   color: currCardColor,
                   child: Column(

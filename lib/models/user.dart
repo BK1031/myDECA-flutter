@@ -30,8 +30,10 @@ class User {
     yearsMember = snapshot.value["yearsMember"];
     shirtSize = snapshot.value["shirtSize"];
     chapter.chapterID = snapshot.value["chapterID"];
-    for (int i = 0; i < snapshot.value["roles"].length; i++) {
-      roles.add(snapshot.value["roles"][i]);
+    if (snapshot.value["roles"] != null) {
+      for (int i = 0; i < snapshot.value["roles"].length; i++) {
+        roles.add(snapshot.value["roles"][i]);
+      }
     }
     if (snapshot.value["groups"] != null) {
       for (int i = 0; i < snapshot.value["groups"].length; i++) {

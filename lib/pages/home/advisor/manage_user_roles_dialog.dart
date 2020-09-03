@@ -127,7 +127,6 @@ class _ManageUserRolesDialogState extends State<ManageUserRolesDialog> {
                   new FlatButton(
                     child: new Text("OK", style: TextStyle(color: mainColor),),
                     onPressed: () {
-                      FirebaseDatabase.instance.reference().child("users").child(user.userID).child("roles").remove();
                       List<String> list = new List();
                       rolesMap.keys.forEach((key) {
                         if (rolesMap[key]){
@@ -135,6 +134,7 @@ class _ManageUserRolesDialogState extends State<ManageUserRolesDialog> {
                         }
                       });
                       if (list.isNotEmpty) {
+                        FirebaseDatabase.instance.reference().child("users").child(user.userID).child("roles").remove();
                         FirebaseDatabase.instance.reference().child("users").child(user.userID).child("roles").set(list);
                         router.pop(context);
                       }

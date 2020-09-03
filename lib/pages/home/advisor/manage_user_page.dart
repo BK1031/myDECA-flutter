@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -23,6 +25,8 @@ class _ManageUserPageState extends State<ManageUserPage> {
 
   List<Widget> usersWidgetList = new List();
   List<Widget> groupsWidgetList = new List();
+
+  Timer _timer;
 
   void manageRolesDialog(User user) {
     showDialog(
@@ -65,19 +69,26 @@ class _ManageUserPageState extends State<ManageUserPage> {
   @override
   void initState() {
     super.initState();
-    FirebaseDatabase.instance.reference().child("users").onValue.listen((event) {
-      print("rebuilding users");
+    // FirebaseDatabase.instance.reference().child("users").onValue.listen((event) {
+    //   print("rebuilding users");
+    updateUsers();
+    _timer = new Timer.periodic(const Duration(seconds: 1), (timer) {
       updateUsers();
     });
+    // });
     FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").onValue.listen((event) {
       updateGroups();
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
+  }
+
   void updateUsers() {
-    setState(() {
-      usersWidgetList.clear();
-    });
+    usersWidgetList.clear();
     FirebaseDatabase.instance.reference().child("users").onChildAdded.listen((event) {
       User user = new User.fromSnapshot(event.snapshot);
       print("+ ${user.userID}");
@@ -186,6 +197,12 @@ class _ManageUserPageState extends State<ManageUserPage> {
             "MANAGE USERS",
             style: TextStyle(fontFamily: "Montserrat"),
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.refresh),
+          onPressed: () {
+            updateUsers();
+          },
         ),
         body: new Container(
           color: currBackgroundColor,

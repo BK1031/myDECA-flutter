@@ -48,6 +48,14 @@ class _ManageUserPageState extends State<ManageUserPage> {
           return AlertDialog(
             backgroundColor: currBackgroundColor,
             content: new ManageGroupDialog(id),
+            actions: [
+              new FlatButton(
+                child: new Text("DONE"),
+                onPressed: () {
+                  router.pop(context);
+                },
+              )
+            ],
           );
         }
     );

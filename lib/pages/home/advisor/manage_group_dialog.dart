@@ -31,7 +31,10 @@ class _ManageGroupDialogState extends State<ManageGroupDialog> {
   void getHandbooks() {
     setState(() {
       handbookWidgetList.clear();
-      handbookWidgetList.add(Container(padding: EdgeInsets.all(8), child: new Text("Select a Handbook", style: TextStyle(color: currTextColor))));
+      handbookWidgetList.add(Container(
+        padding: EdgeInsets.all(8),
+        child: new Text("Select a Handbook", style: TextStyle(color: currTextColor))
+      ));
     });
     FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("handbooks").onChildAdded.listen((event) {
       setState(() {
@@ -72,7 +75,7 @@ class _ManageGroupDialogState extends State<ManageGroupDialog> {
       if (user.groups.contains(id)) {
         setState(() {
           usersWidgetList.add(new Container(
-            padding: EdgeInsets.only(bottom: 8),
+            padding: EdgeInsets.only(bottom: 4),
             child: new Card(
               color: currCardColor,
               child: Container(
@@ -91,19 +94,21 @@ class _ManageGroupDialogState extends State<ManageGroupDialog> {
                         ),
                       ),
                     ),
-                    new Padding(padding: EdgeInsets.all(8),),
-                    new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        new Text(
-                          user.firstName + " " + user.lastName,
-                          style: TextStyle(color: currTextColor),
-                        ),
-                        new Text(
-                          user.email,
-                          style: TextStyle(color: currTextColor),
-                        ),
-                      ],
+                    new Padding(padding: EdgeInsets.all(4),),
+                    new Expanded(
+                      child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          new Text(
+                            user.firstName + " " + user.lastName,
+                            style: TextStyle(color: currTextColor),
+                          ),
+                          new Text(
+                            user.email,
+                            style: TextStyle(color: currTextColor),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -123,22 +128,35 @@ class _ManageGroupDialogState extends State<ManageGroupDialog> {
         child: new Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      new Text(
-                        name,
-                        style: TextStyle(fontFamily: "Montserrat", fontSize: 22, color: currTextColor),
-                      ),
-                      new Text(
-                        id,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
+                  Container(
+                    height: 25,
+                    child: new RaisedButton(
+                      child: Text("DELETE", style: TextStyle()),
+                      color: Colors.red,
+                      textColor: Colors.white,
+                      onPressed: () {
+                        FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").child(id).remove();
+                        router.pop(context);
+                      },
+                    ),
                   ),
+                ],
+              ),
+              new Padding(padding: EdgeInsets.all(4)),
+              new Text(
+                name,
+                style: TextStyle(fontFamily: "Montserrat", fontSize: 22, color: currTextColor),
+              ),
+              new Text(
+                id,
+                style: TextStyle(color: Colors.grey),
+              ),
+              new Padding(padding: EdgeInsets.all(4)),
+              Row(
+                children: [
                   new InkWell(
                     onTap: () {
                       if (height == 0) {
@@ -161,6 +179,18 @@ class _ManageGroupDialogState extends State<ManageGroupDialog> {
                         child: new Text(handbook == "" ? "Select Handbook" : handbook, style: TextStyle(color: handbook == "" ? mainColor : Colors.white),),
                       ),
                     ),
+                  ),
+                  new Visibility(
+                    visible: handbook != "",
+                    child: new IconButton(
+                      icon: new Icon(Icons.clear),
+                      onPressed: () {
+                        FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").child(id).child("handbook").remove();
+                        setState(() {
+                          handbook = "";
+                        });
+                      },
+                    )
                   )
                 ],
               ),

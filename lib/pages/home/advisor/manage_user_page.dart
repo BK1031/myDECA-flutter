@@ -23,7 +23,7 @@ class ManageUserPage extends StatefulWidget {
 
 class _ManageUserPageState extends State<ManageUserPage> {
 
-  List<Widget> usersWidgetList = new List();
+  List<User> usersList = new List();
   List<Widget> groupsWidgetList = new List();
 
   Timer _timer;
@@ -69,96 +69,36 @@ class _ManageUserPageState extends State<ManageUserPage> {
   @override
   void initState() {
     super.initState();
-    FirebaseDatabase.instance.reference().child("users").onValue.listen((event) {
-      print("rebuilding users");
-      updateUsers();
+    FirebaseDatabase.instance.reference().child("users").onChildAdded.listen((event) {
+      User user = new User.fromSnapshot(event.snapshot);
+      if (user.chapter.chapterID == currUser.chapter.chapterID) {
+        setState(() {
+          usersList.add(user);
+        });
+      }
+    });
+    FirebaseDatabase.instance.reference().child("users").onChildChanged.listen((event) {
+      User user = new User.fromSnapshot(event.snapshot);
+      if (user.chapter.chapterID == currUser.chapter.chapterID) {
+        setState(() {
+          usersList[usersList.indexWhere((element) {
+            return element.userID == user.userID;
+          })] = user;
+        });
+      }
+    });
+    FirebaseDatabase.instance.reference().child("users").onChildRemoved.listen((event) {
+      User user = new User.fromSnapshot(event.snapshot);
+      if (user.chapter.chapterID == currUser.chapter.chapterID) {
+        setState(() {
+          usersList.removeWhere((element) {
+            return element.userID == user.userID;
+          });
+        });
+      }
     });
     FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").onValue.listen((event) {
       updateGroups();
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _timer.cancel();
-  }
-
-  void updateUsers() {
-    setState(() {
-      usersWidgetList.clear();
-    });
-    FirebaseDatabase.instance.reference().child("users").onChildAdded.listen((event) {
-      User user = new User.fromSnapshot(event.snapshot);
-      print("+ ${user.userID}");
-      if (user.chapter.chapterID == currUser.chapter.chapterID) {
-        // In same chapter
-        List<Widget> rolesList = new List();
-        user.roles.forEach((element) {
-          rolesList.add(new Card(
-            color: roleColors[element],
-            child: new Container(
-              padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
-              child: new Text(element, style: TextStyle(color: Colors.white),),
-            ),
-          ));
-        });
-        setState(() {
-          usersWidgetList.add(new Container(
-            padding: EdgeInsets.only(bottom: 4),
-            child: new InkWell(
-              onTap: () {
-                manageRolesDialog(user);
-              },
-              child: new Card(
-                color: currCardColor,
-                child: Container(
-                  padding: EdgeInsets.all(8),
-                  child: new Row(
-                    children: [
-                      new Padding(padding: EdgeInsets.all(4),),
-                      new CircleAvatar(
-                        radius: 25,
-                        backgroundColor: roleColors[user.roles.first],
-                        child: new ClipRRect(
-                          borderRadius: new BorderRadius.all(Radius.circular(45)),
-                          child: new CachedNetworkImage(
-                            imageUrl: user.profileUrl,
-                            height: 45,
-                            width: 45,
-                          ),
-                        ),
-                      ),
-                      new Padding(padding: EdgeInsets.all(8),),
-                      new Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          new Text(
-                            user.firstName + " " + user.lastName,
-                            style: TextStyle(color: currTextColor),
-                          ),
-                          new Text(
-                            user.email,
-                            style: TextStyle(color: currTextColor),
-                          ),
-                          new Padding(padding: EdgeInsets.all(4),),
-                          Container(
-                            width: MediaQuery.of(context).size.width - 114,
-                            child: new Wrap(
-                              direction: Axis.horizontal,
-                              children: rolesList
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ));
-        });
-      }
     });
   }
 
@@ -197,12 +137,6 @@ class _ManageUserPageState extends State<ManageUserPage> {
             style: TextStyle(fontFamily: "Montserrat"),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.refresh),
-          onPressed: () {
-            updateUsers();
-          },
-        ),
         body: new Container(
           color: currBackgroundColor,
           child: Column(
@@ -228,7 +162,65 @@ class _ManageUserPageState extends State<ManageUserPage> {
                       padding: EdgeInsets.only(left: 8, right: 8, top: 8),
                       child: new SingleChildScrollView(
                         child: new Column(
-                          children: usersWidgetList,
+                          children: usersList.map((user) => new Container(
+                            padding: EdgeInsets.only(bottom: 4),
+                            child: new InkWell(
+                              onTap: () {
+                                manageRolesDialog(user);
+                              },
+                              child: new Card(
+                                color: currCardColor,
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  child: new Row(
+                                    children: [
+                                      new Padding(padding: EdgeInsets.all(4),),
+                                      new CircleAvatar(
+                                        radius: 25,
+                                        backgroundColor: roleColors[user.roles.first],
+                                        child: new ClipRRect(
+                                          borderRadius: new BorderRadius.all(Radius.circular(45)),
+                                          child: new CachedNetworkImage(
+                                            imageUrl: user.profileUrl,
+                                            height: 45,
+                                            width: 45,
+                                          ),
+                                        ),
+                                      ),
+                                      new Padding(padding: EdgeInsets.all(8),),
+                                      new Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          new Text(
+                                            user.firstName + " " + user.lastName,
+                                            style: TextStyle(color: currTextColor),
+                                          ),
+                                          new Text(
+                                            user.email,
+                                            style: TextStyle(color: currTextColor),
+                                          ),
+                                          new Padding(padding: EdgeInsets.all(4),),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width - 114,
+                                            child: new Wrap(
+                                              direction: Axis.horizontal,
+                                              children: user.roles.map((role) => new Card(
+                                                color: roleColors[role],
+                                                child: new Container(
+                                                  padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
+                                                  child: new Text(role, style: TextStyle(color: Colors.white),),
+                                                ),
+                                              )).toList()
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )).toList(),
                         ),
                       ),
                     ),

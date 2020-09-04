@@ -82,6 +82,7 @@ class _JoinGroupDialogState extends State<JoinGroupDialog> {
                           labelText: "Join Code",
                           labelStyle: TextStyle(color: darkMode ? Colors.grey : Colors.black54)
                         ),
+                        autocorrect: false,
                         textCapitalization: TextCapitalization.characters,
                         onChanged: (input) {
                           setState(() {

@@ -69,13 +69,10 @@ class _ManageUserPageState extends State<ManageUserPage> {
   @override
   void initState() {
     super.initState();
-    // FirebaseDatabase.instance.reference().child("users").onValue.listen((event) {
-    //   print("rebuilding users");
-    updateUsers();
-    _timer = new Timer.periodic(const Duration(seconds: 1), (timer) {
+    FirebaseDatabase.instance.reference().child("users").onValue.listen((event) {
+      print("rebuilding users");
       updateUsers();
     });
-    // });
     FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").onValue.listen((event) {
       updateGroups();
     });
@@ -88,7 +85,9 @@ class _ManageUserPageState extends State<ManageUserPage> {
   }
 
   void updateUsers() {
-    usersWidgetList.clear();
+    setState(() {
+      usersWidgetList.clear();
+    });
     FirebaseDatabase.instance.reference().child("users").onChildAdded.listen((event) {
       User user = new User.fromSnapshot(event.snapshot);
       print("+ ${user.userID}");

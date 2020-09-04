@@ -264,13 +264,16 @@ class _RegisterPageState extends State<RegisterPage> {
               color: mainColor,
               child: Hero(
                 tag: "welcome_text",
-                child: new Text(
-                  "Welcome to\nmyDECA",
-                  style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 35
+                child: new Material(
+                  color: Colors.transparent,
+                  child: new Text(
+                    "Welcome to\nmyDECA",
+                    style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 35
+                    ),
                   ),
                 ),
               ),

@@ -4,6 +4,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:mydeca_flutter/utils/config.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
+import 'package:mydeca_flutter/models/user.dart' as user;
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -130,6 +131,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   width: double.infinity,
                   child: new RaisedButton(
                     onPressed: () {
+                      currUser = new user.User.plain();
                       FirebaseAuth.instance.signOut();
                       router.navigateTo(context, "/auth-checker", transition: TransitionType.fadeIn, replace: true);
                     },

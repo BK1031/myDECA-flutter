@@ -1,10 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:mydeca_flutter/utils/config.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:mydeca_flutter/models/user.dart' as user;
 import '../app_drawer.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -13,6 +14,10 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+
+  bool pushNotif = true;
+  bool chatNotif = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,6 +106,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     new ListTile(
                       title: new Text("Sign Out", style: TextStyle(fontSize: 17, color: Colors.red),),
+                      onTap: () {
+                        currUser = new user.User.plain();
+                        FirebaseAuth.instance.signOut();
+                        router.navigateTo(context, "/auth-checker", transition: TransitionType.fadeIn, replace: true);
+                      },
                     ),
                     new ListTile(
                       title: new Text("Delete Account", style: TextStyle(color: Colors.red, fontSize: 17),),
@@ -121,13 +131,23 @@ class _SettingsPageState extends State<SettingsPage> {
                     new SwitchListTile.adaptive(
                       activeColor: mainColor,
                       activeTrackColor: mainColor,
-                      value: true,
+                      value: pushNotif,
+                      onChanged: (val) {
+                        setState(() {
+                          pushNotif = !pushNotif;
+                        });
+                      },
                       title: new Text("Push Notifications", style: TextStyle(fontSize: 17, color: currTextColor)),
                     ),
                     new SwitchListTile.adaptive(
                       activeColor: mainColor,
                       activeTrackColor: mainColor,
-                      value: true,
+                      value: chatNotif,
+                      onChanged: (val) {
+                        setState(() {
+                          chatNotif = !chatNotif;
+                        });
+                      },
                       title: new Text("Chat Notifications", style: TextStyle(fontSize: 17, color: currTextColor)),
                     ),
                     new Visibility(

@@ -3,7 +3,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mydeca_flutter/models/handbook.dart';
+import 'package:mydeca_flutter/models/handbook_item.dart';
 import 'package:mydeca_flutter/models/user.dart';
+import 'package:mydeca_flutter/models/user_handbook.dart';
 import 'package:mydeca_flutter/utils/config.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
 
@@ -19,7 +21,7 @@ class _HandbookPageState extends State<HandbookPage> {
   String selectedGroup = "";
   bool hasHandbook = false;
   List<Widget> groupsList = new List();
-  List<Widget> widgetList = new List();
+  List<UserHandbook> handbookList = new List();
 
   @override
   void initState() {
@@ -50,7 +52,7 @@ class _HandbookPageState extends State<HandbookPage> {
 
   Future<void> updateHandbookView() async {
     setState(() {
-      widgetList.clear();
+      handbookList.clear();
     });
     // Check if group has handbook
     FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").child(selectedGroupID).child("handbook").once().then((value) async {
@@ -62,200 +64,80 @@ class _HandbookPageState extends State<HandbookPage> {
         String handbookID = value.value;
         if (currUser.roles.contains("Advisor") || currUser.roles.contains("President") || currUser.roles.contains("Developer") || currUser.roles.contains("Officer")) {
           // Show all users
-          FirebaseDatabase.instance.reference().child("users").onChildAdded.listen((event) async {
-            User user = new User.fromSnapshot(event.snapshot);
-            if (user.chapter.chapterID == currUser.chapter.chapterID && user.groups.contains(selectedGroupID)) {
-              // User is in chapter and selected group
-              await FirebaseDatabase.instance.reference().child("chapters").child(user.chapter.chapterID).child("handbooks").child(handbookID).once().then((value) async {
-                Handbook handbook = new Handbook.fromSnapshot(value);
-                List<Widget> taskList = new List();
+          await FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("handbooks").child(handbookID).once().then((value) {
+            Handbook handbook = new Handbook.fromSnapshot(value);
+            FirebaseDatabase.instance.reference().child("users").onChildAdded.listen((event) {
+              User user = User.fromSnapshot(event.snapshot);
+              if (user.chapter.chapterID == currUser.chapter.chapterID && user.groups.contains(selectedGroupID)) {
+                UserHandbook userHandbook = new UserHandbook();
+                userHandbook.handbookID = handbook.handbookID;
+                userHandbook.name = handbook.name;
+                userHandbook.user = user;
                 for (int i = 0; i < handbook.tasks.length; i++) {
-                  // Check is task completed
-                  await FirebaseDatabase.instance.reference().child("users").child(user.userID).child("handbooks").child(handbookID).child(i.toString()).once().then((value) async {
-                    if (value.value != null) {
-                      // Task is completed
-                      await FirebaseDatabase.instance.reference().child("users").child(value.value["checkedBy"]).once().then((value2) {
-                        User checkedBy = new User.fromSnapshot(value2);
-                        taskList.add(new ExpansionTile(
-                          leading: new InkWell(
-                            child: Icon(Icons.check_box, color: mainColor),
-                            onTap: () {
-                              FirebaseDatabase.instance.reference().child("users").child(user.userID).child("handbooks").child(handbookID).child(i.toString()).remove();
-                              updateHandbookView();
-                            },
-                          ),
-                          title: new Text(handbook.tasks[i], style: TextStyle(color: currTextColor),),
-                          children: [
-                            Container(
-                              padding: EdgeInsets.only(left: 16, top: 8, bottom: 8),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  new Container(
-                                    child: new CircleAvatar(
-                                      radius: 15,
-                                      backgroundColor: roleColors[checkedBy.roles.first],
-                                      child: new ClipRRect(
-                                        borderRadius: new BorderRadius.all(Radius.circular(45)),
-                                        child: new CachedNetworkImage(
-                                          imageUrl: checkedBy.profileUrl,
-                                          height: 26,
-                                          width: 26
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  new Padding(padding: EdgeInsets.all(4)),
-                                  new Container(
-                                    child: new Text("${checkedBy.firstName} ${checkedBy.lastName}  |  ", style: TextStyle(color: Colors.grey, fontSize: 16),),
-                                  ),
-                                  new Container(
-                                    child: new Text("${DateFormat().add_MMMd().format(DateTime.parse(value.value["date"]))} @ ${DateFormat().add_jm().format(DateTime.parse(value.value["date"]))}", style: TextStyle(color: Colors.grey, fontSize: 16),),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ));
-                      });
-                    }
-                    else {
-                      taskList.add(
-                          new ListTile(
-                            onTap: () {
-                              FirebaseDatabase.instance.reference().child("users").child(user.userID).child("handbooks").child(handbookID).child(i.toString()).set({
-                                "checkedBy" : currUser.userID,
-                                "date": DateTime.now().toString()
-                              });
-                              updateHandbookView();
-                            },
-                            leading: Icon(Icons.check_box_outline_blank, color: darkMode ? Colors.grey : Colors.black54),
-                            title: new Text(handbook.tasks[i], style: TextStyle(color: currTextColor),),
-                          )
-                      );
-                    }
-                  });
+                  HandbookItem item = new HandbookItem();
+                  item.index = i;
+                  item.task = handbook.tasks[i];
+                  userHandbook.items.add(item);
                 }
                 setState(() {
-                  widgetList.add(
-                    Container(
-                      padding: EdgeInsets.only(bottom: 8),
-                      child: new Card(
-                        color: currCardColor,
-                        child: Container(
-                          padding: EdgeInsets.all(16),
-                          child: new Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  new Text(
-                                    "${user.firstName} ${user.lastName} – ${handbook.name}",
-                                    style: TextStyle(color: currTextColor, fontSize: 18),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: taskList,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
+                  handbookList.add(userHandbook);
                 });
-              });
-            }
+                FirebaseDatabase.instance.reference().child("users").child(user.userID).child("handbooks").child(handbookID).onChildAdded.listen((event) {
+                  UserHandbook tempHandbook = handbookList[handbookList.indexWhere((element) => element.user.userID == user.userID)];
+                  FirebaseDatabase.instance.reference().child("users").child(event.snapshot.value["checkedBy"]).once().then((value) {
+                    User tempUser = new User.fromSnapshot(value);
+                    tempHandbook.items[int.parse(event.snapshot.key)].checkedBy = tempUser;
+                    tempHandbook.items[int.parse(event.snapshot.key)].timestamp = DateTime.parse(event.snapshot.value["date"]);
+                    setState(() {
+                      handbookList[handbookList.indexWhere((element) => element.user.userID == user.userID)] = tempHandbook;
+                    });
+                  });
+                });
+                FirebaseDatabase.instance.reference().child("users").child(user.userID).child("handbooks").child(handbookID).onChildRemoved.listen((event) {
+                  UserHandbook tempHandbook = handbookList[handbookList.indexWhere((element) => element.user.userID == user.userID)];
+                  tempHandbook.items[int.parse(event.snapshot.key)].timestamp = null;
+                  setState(() {
+                    handbookList[handbookList.indexWhere((element) => element.user.userID == user.userID)] = tempHandbook;
+                  });
+                });
+              }
+            });
           });
         }
         else {
           // Show just user
           await FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("handbooks").child(handbookID).once().then((value) async {
             Handbook handbook = new Handbook.fromSnapshot(value);
-            List<Widget> taskList = new List();
+            UserHandbook userHandbook = new UserHandbook();
+            userHandbook.handbookID = handbook.handbookID;
+            userHandbook.name = handbook.name;
+            userHandbook.user = currUser;
             for (int i = 0; i < handbook.tasks.length; i++) {
-              // Check is task completed
-              await FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("handbooks").child(handbookID).child(i.toString()).once().then((value) async {
-                if (value.value != null) {
-                  // Task is completed
-                  await FirebaseDatabase.instance.reference().child("users").child(value.value["checkedBy"]).once().then((value2) {
-                    User checkedBy = new User.fromSnapshot(value2);
-                    taskList.add(new ListTile(
-                        leading: Icon(Icons.check_box, color: mainColor),
-                        title: new Text(handbook.tasks[i], style: TextStyle(color: currTextColor),),
-                    ));
-                    taskList.add(
-                        Container(
-                          padding: EdgeInsets.only(left: 16),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              new Container(
-                                child: new CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: roleColors[checkedBy.roles.first],
-                                  child: new ClipRRect(
-                                    borderRadius: new BorderRadius.all(Radius.circular(45)),
-                                    child: new CachedNetworkImage(
-                                      imageUrl: checkedBy.profileUrl,
-                                      height: 20,
-                                      width: 20,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              new Padding(padding: EdgeInsets.all(4)),
-                              new Container(
-                                child: new Text("${checkedBy.firstName} ${checkedBy.lastName}  |  ", style: TextStyle(color: Colors.grey),),
-                              ),
-                              new Container(
-                                child: new Text("${DateFormat().add_MMMd().add_jm().format(DateTime.parse(value.value["date"]))}", style: TextStyle(color: Colors.grey),),
-                              )
-                            ],
-                          ),
-                        )
-                    );
-                  });
-                }
-                else {
-                  taskList.add(
-                      new ListTile(
-                        leading: Icon(Icons.check_box_outline_blank, color: darkMode ? Colors.grey : Colors.black54),
-                        title: new Text(handbook.tasks[i], style: TextStyle(color: currTextColor),),
-                      )
-                  );
-                }
-              });
+              HandbookItem item = new HandbookItem();
+              item.index = i;
+              item.task = handbook.tasks[i];
+              userHandbook.items.add(item);
             }
             setState(() {
-              widgetList.add(
-                Container(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: new Card(
-                    color: currCardColor,
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      child: new Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              new Text(
-                                handbook.name,
-                                style: TextStyle(color: currTextColor, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: taskList,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
+              handbookList.add(userHandbook);
+            });
+            FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("handbooks").child(handbookID).onChildAdded.listen((event) {
+              UserHandbook tempHandbook = handbookList[handbookList.indexWhere((element) => element.user.userID == currUser.userID)];
+              FirebaseDatabase.instance.reference().child("users").child(event.snapshot.value["checkedBy"]).once().then((value) {
+                User tempUser = new User.fromSnapshot(value);
+                tempHandbook.items[int.parse(event.snapshot.key)].checkedBy = tempUser;
+                tempHandbook.items[int.parse(event.snapshot.key)].timestamp = DateTime.parse(event.snapshot.value["date"]);
+                setState(() {
+                  handbookList[handbookList.indexWhere((element) => element.user.userID == currUser.userID)] = tempHandbook;
+                });
+              });
+            });
+            FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("handbooks").child(handbookID).onChildRemoved.listen((event) {
+              UserHandbook tempHandbook = handbookList[handbookList.indexWhere((element) => element.user.userID == currUser.userID)];
+              tempHandbook.items[int.parse(event.snapshot.key)].timestamp = null;
+              setState(() {
+                handbookList[handbookList.indexWhere((element) => element.user.userID == currUser.userID)] = tempHandbook;
+              });
             });
           });
         }
@@ -285,22 +167,22 @@ class _HandbookPageState extends State<HandbookPage> {
           child: new Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              new InkWell(
-                onTap: () {
-                  if (height == 0) {
-                    setState(() {
-                      height = 250;
-                    });
-                  }
-                  else {
-                    setState(() {
-                      height = 0;
-                    });
-                  }
-                },
-                child: new Card(
-                  elevation: selectedGroupID == "" ? 0 : 1,
-                  color: selectedGroupID == "" ? currCardColor : mainColor,
+              new Card(
+                elevation: selectedGroupID == "" ? 0 : 1,
+                color: selectedGroupID == "" ? currCardColor : mainColor,
+                child: new InkWell(
+                  onTap: () {
+                    if (height == 0) {
+                      setState(() {
+                        height = 250;
+                      });
+                    }
+                    else {
+                      setState(() {
+                        height = 0;
+                      });
+                    }
+                  },
                   child: new ListTile(
                     title: new Text(selectedGroupID == "" ? "Select Group" : selectedGroup, style: TextStyle(color: selectedGroupID == "" ? mainColor : Colors.white),),
                   ),
@@ -324,7 +206,88 @@ class _HandbookPageState extends State<HandbookPage> {
               ),
               new Padding(padding: EdgeInsets.all(4)),
               new Column(
-                children: widgetList,
+                children: handbookList.map((handbook) => new Container(
+                  child: new Card(
+                    color: currCardColor,
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          new Text(
+                            "${handbook.user.firstName} – ${handbook.name}",
+                            style: TextStyle(color: currTextColor, fontSize: 18),
+                          ),
+                          Column(
+                            children: handbook.items.map((item) {
+                              if (item.timestamp != null) {
+                                return new ExpansionTile(
+                                  leading: InkWell(
+                                    child: Icon(Icons.check_box, color: mainColor,),
+                                    onTap: () {
+                                      if (currUser.roles.contains("Developer") || currUser.roles.contains("Advisor") || currUser.roles.contains("Officer")) {
+                                        FirebaseDatabase.instance.reference().child("users").child(handbook.user.userID).child("handbooks").child(handbook.handbookID).child(item.index.toString()).remove();
+                                      }
+                                    },
+                                  ),
+                                  title: new Text(item.task, style: TextStyle(color: currTextColor),),
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.only(left: 16, top: 8, bottom: 8),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          new Container(
+                                            child: new CircleAvatar(
+                                              radius: 15,
+                                              backgroundColor: roleColors[item.checkedBy.roles.first],
+                                              child: new ClipRRect(
+                                                borderRadius: new BorderRadius.all(Radius.circular(45)),
+                                                child: new CachedNetworkImage(
+                                                    imageUrl: item.checkedBy.profileUrl,
+                                                    height: 26,
+                                                    width: 26
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          new Padding(padding: EdgeInsets.all(4)),
+                                          new Container(
+                                            child: new Text("${item.checkedBy.firstName} ${item.checkedBy.lastName}  |  ", style: TextStyle(color: Colors.grey, fontSize: 16),),
+                                          ),
+                                          new Container(
+                                            child: new Text("${DateFormat().add_MMMd().format(item.timestamp)} @ ${DateFormat().add_jm().format(item.timestamp)}", style: TextStyle(color: Colors.grey, fontSize: 16),),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                );
+                              }
+                              else {
+                                return new ListTile(
+                                  leading: Icon(
+                                    Icons.check_box_outline_blank,
+                                    color: darkMode ? Colors.grey : Colors.black54,
+                                  ),
+                                  title: new Text(item.task, style: TextStyle(color: currTextColor),),
+                                  onTap: () {
+                                    if (currUser.roles.contains("Developer") || currUser.roles.contains("Advisor") || currUser.roles.contains("Officer")) {
+                                      FirebaseDatabase.instance.reference().child("users").child(handbook.user.userID).child("handbooks").child(handbook.handbookID).child(item.index.toString()).set({
+                                        "checkedBy": currUser.userID,
+                                        "date": DateTime.now().toString()
+                                      });
+                                    }
+                                  },
+                                );
+                              }
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                )).toList(),
               )
             ],
           ),

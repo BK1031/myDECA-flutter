@@ -643,21 +643,27 @@ class _HomePageState extends State<HomePage> {
                             },
                             child: Row(
                               children: [
-                                Container(
-                                  padding: EdgeInsets.only(left: 16, right: 16),
-                                  child: new Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      new Icon(Icons.event, size: 35.0, color: darkMode ? Colors.grey : Colors.black54),
-                                      new Text(
-                                        "My Conferences",
-                                        style: TextStyle(fontSize: 13.0, color: currTextColor),
-                                      )
-                                    ],
+                                new ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                      minHeight: 100
+                                  ),
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 16, right: 16),
+                                    child: new Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        new Icon(Icons.event, size: 35.0, color: darkMode ? Colors.grey : Colors.black54),
+                                        new Text(
+                                          "My Conferences",
+                                          style: TextStyle(fontSize: 13.0, color: currTextColor),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 new Expanded(
                                   child: Container(
+                                    padding: EdgeInsets.only(top: 8, bottom: 8),
                                     child: new Wrap(
                                       direction: Axis.horizontal,
                                       children: conferenceWidgetList,

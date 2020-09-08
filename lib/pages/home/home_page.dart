@@ -396,6 +396,7 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.only(left: 8, top: 8, right: 8),
         child: new SingleChildScrollView(
           child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               new Text(
                 "Welcome back, ${currUser.firstName}",
@@ -450,6 +451,7 @@ class _HomePageState extends State<HomePage> {
                         color: currCardColor,
                         child: new InkWell(
                           onTap: () {
+                            alert("No favorite events selected! Please select your favorite events from the competitive event browser first.");
                           },
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

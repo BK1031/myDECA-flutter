@@ -54,7 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     new ListTile(
                       title: new Text("Update Profile", style: TextStyle(color: mainColor), textAlign: TextAlign.center,),
                       onTap: () {
-                        router.navigateTo(context, '/settings/update-profile', transition: TransitionType.nativeModal);
+                        router.navigateTo(context, '/profile', transition: TransitionType.nativeModal);
                       },
                     )
                   ],
@@ -115,6 +115,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     new ListTile(
                       title: new Text("Delete Account", style: TextStyle(color: Colors.red, fontSize: 17),),
                       subtitle: new Text("\nDeleting your myDECA Account will remove all the data linked to your account as well. You will be required to create a new account in order to sign in again.\n", style: TextStyle(color: Colors.grey)),
+                      onTap: () {
+
+                      },
                     )
                   ],
                 ),

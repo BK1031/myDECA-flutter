@@ -59,7 +59,11 @@ class _SendMediaDialogState extends State<SendMediaDialog> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new Image.file(image),
+          new Image.file(
+            image,
+            width: MediaQuery.of(context).size.width * 2/3,
+            height: MediaQuery.of(context).size.height * 1/2,
+          ),
           new Padding(padding: EdgeInsets.all(8.0)),
           new Visibility(
             visible: !_uploading,

@@ -69,6 +69,13 @@ class _ChatViewPageState extends State<ChatViewPage> {
         FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("chat").child(chatID).child("name").set(chatName);
       }
     });
+    Future.delayed(const Duration(seconds: 1), () {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent + 20.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
     FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("chat").child(chatID).onChildAdded.listen((event) {
       ChatMessage message = new ChatMessage.fromSnapshot(event.snapshot);
       FirebaseDatabase.instance.reference().child("users").child(message.author.userID).once().then((value) {
@@ -174,6 +181,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
                           borderRadius: BorderRadius.circular(2.0),
                           child: new CachedNetworkImage(
                             imageUrl: message.message,
+                            width: MediaQuery.of(context).size.width > 500 ? 500 : null,
                           ),
                         )
                       ),
@@ -222,6 +230,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
                               borderRadius: BorderRadius.circular(2.0),
                               child: new CachedNetworkImage(
                                 imageUrl: message.message,
+                                width: MediaQuery.of(context).size.width > 500 ? 500 : null,
                               ),
                             )
                           ],
@@ -234,11 +243,13 @@ class _ChatViewPageState extends State<ChatViewPage> {
             }
           }
         });
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent + 50.0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent + 20.0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        });
       });
     });
   }

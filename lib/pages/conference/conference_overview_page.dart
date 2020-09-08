@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mydeca_flutter/models/conference.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class ConferenceOverviewPage extends StatefulWidget {
   @override
@@ -91,7 +92,19 @@ class _ConferenceOverviewPageState extends State<ConferenceOverviewPage> {
                   new Expanded(
                     child: new InkWell(
                       onTap: () {
-                        launch(conference.mapUrl);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => new Scaffold(
+                            appBar: AppBar(
+                              title: new Text("Conference".toUpperCase()),
+                            ),
+                            backgroundColor: currBackgroundColor,
+                            body: new WebView(
+                              initialUrl: conference.mapUrl,
+                              javascriptMode: JavascriptMode.unrestricted,
+                            ),
+                          )),
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.all(16),
@@ -117,7 +130,19 @@ class _ConferenceOverviewPageState extends State<ConferenceOverviewPage> {
             onTap: () {
               print(conference.hotelMapUrl);
               if (conference.hotelMapUrl != "") {
-                launch(conference.hotelMapUrl);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => new Scaffold(
+                    appBar: AppBar(
+                      title: new Text("Hotel map".toUpperCase()),
+                    ),
+                    backgroundColor: currBackgroundColor,
+                    body: new WebView(
+                      initialUrl: conference.hotelMapUrl,
+                      javascriptMode: JavascriptMode.unrestricted,
+                    ),
+                  )),
+                );
               }
               else {
                 missingDataDialog();

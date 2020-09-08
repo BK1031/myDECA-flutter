@@ -55,7 +55,7 @@ class _ConferenceDetailsPageState extends State<ConferenceDetailsPage> {
               SliverPersistentHeader(
                 delegate: _SliverAppBarDelegate(
                   TabBar(
-                    isScrollable: true,
+                    isScrollable: MediaQuery.of(context).size.width > 400 ? false : true,
                     tabs: [
                       Tab(text: "OVERVIEW"),
                       Tab(text: "SCHEDULE"),
@@ -70,15 +70,13 @@ class _ConferenceDetailsPageState extends State<ConferenceDetailsPage> {
           },
           body: Container(
             color: currBackgroundColor,
-              child: new Expanded(
-                child: new TabBarView(
-                  children: [
-                    new ConferenceOverviewPage(),
-                    new ConferenceSchedulePage(),
-                    new ConferenceWinnersPage(),
-                    new ConferenceMediaPage(),
-                  ],
-                ),
+              child: new TabBarView(
+                children: [
+                  new ConferenceOverviewPage(),
+                  new ConferenceSchedulePage(),
+                  new ConferenceWinnersPage(),
+                  new ConferenceMediaPage(),
+                ],
               )
           ),
         ),

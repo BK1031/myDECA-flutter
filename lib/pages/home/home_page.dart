@@ -14,6 +14,7 @@ import 'package:mydeca_flutter/pages/home/welcome_dialog.dart';
 import 'package:mydeca_flutter/utils/config.dart';
 import 'package:mydeca_flutter/utils/theme.dart';
 import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'advisor/advisor_conference_select.dart';
@@ -39,6 +40,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getAnnouncements();
+    updateUserGroups();
+    getAdvisorInfo();
+    // firebaseCloudMessagingListeners();
+    setupOnesignalNotifications();
+    saveToken();
     // Get Session Info
     FirebaseDatabase.instance.reference().child("stableVersion").once().then((DataSnapshot snapshot) {
       Version stable = Version(snapshot.value);
@@ -88,6 +95,30 @@ class _HomePageState extends State<HomePage> {
           ],
         )
     );
+  }
+
+  Future<void> setupOnesignalNotifications() async {
+    //Remove this method to stop OneSignal Debugging
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    OneSignal.shared.init(
+        ONESIGNAL_APP_ID,
+        iOSSettings: {
+          OSiOSSettings.autoPrompt: false,
+          OSiOSSettings.inAppLaunchUrl: false
+        }
+    );
+    OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.none);
+    await OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
+    saveToken();
+  }
+
+  Future<void> saveToken() async {
+    await OneSignal.shared.setExternalUserId(currUser.userID);
+    var status = await OneSignal.shared.getPermissionSubscriptionState();
+    var playerId = status.subscriptionStatus.userId;
+
+    print("OneSignal Token: $playerId");
+    FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("onesignalToken").set(playerId);
   }
 
   Future<void> firebaseCloudMessagingListeners() async {
@@ -376,13 +407,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (!rendered) {
-      rendered = true;
-      getAnnouncements();
-      updateUserGroups();
-      getAdvisorInfo();
-      firebaseCloudMessagingListeners();
-    }
     return Scaffold(
       appBar: new AppBar(
         title: new Text(

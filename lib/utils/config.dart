@@ -4,11 +4,13 @@ import 'package:mydeca_flutter/models/version.dart';
 
 final router = new Router();
 
-Version appVersion = new Version("1.0.2+1");
+Version appVersion = new Version("1.0.4+1");
 String appStatus = "";
 String appFull = "Version ${appVersion.toString()}";
 
 User currUser = new User.plain();
+
+String ONESIGNAL_APP_ID = "aace854c-8355-4496-bb0d-398260aa3e9d";
 
 String appLegal = """
 MIT License

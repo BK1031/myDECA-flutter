@@ -15,8 +15,83 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
 
-  bool pushNotif = true;
-  bool chatNotif = true;
+  bool mobilePush = true;
+  bool webPush = true;
+  bool emailPush = true;
+
+  void stopNotifDialog(String type) {
+    showDialog(
+        context: context,
+        child: new AlertDialog(
+          backgroundColor: currCardColor,
+          title: new Text("Stop Receiving ${type == "mobilePush" ? "Push" : (type == "webPush" ? "Web" : "Email")} Notifications?", style: TextStyle(color: currTextColor),),
+          content: new Text("Are you sure you want to stop receiving these notifications? You may miss important announcements, meeting updates, and conference information.", style: TextStyle(color: currTextColor)),
+          actions: [
+            new FlatButton(
+                child: new Text("CANCEL"),
+                textColor: mainColor,
+                onPressed: () {
+                  router.pop(context);
+                }
+            ),
+            new FlatButton(
+                child: new Text("DISABLE NOTIFICATIONS"),
+                textColor: Colors.red,
+                onPressed: () {
+                  FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child(type).set(false);
+                  router.pop(context);
+                  getNotificationPrefs();
+                }
+            )
+          ],
+        )
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getNotificationPrefs();
+  }
+
+  getNotificationPrefs() {
+    FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("mobilePush").once().then((value) {
+      if (value.value != null) {
+        setState(() {
+          mobilePush = false;
+        });
+      }
+      else {
+        setState(() {
+          mobilePush = true;
+        });
+      }
+    });
+    FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("webPush").once().then((value) {
+      if (value.value != null) {
+        setState(() {
+          webPush = false;
+        });
+      }
+      else {
+        setState(() {
+          webPush = true;
+        });
+      }
+    });
+    FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("emailPush").once().then((value) {
+      if (value.value != null) {
+        setState(() {
+          emailPush = false;
+        });
+      }
+      else {
+        setState(() {
+          emailPush = true;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,24 +209,53 @@ class _SettingsPageState extends State<SettingsPage> {
                     new SwitchListTile.adaptive(
                       activeColor: mainColor,
                       activeTrackColor: mainColor,
-                      value: pushNotif,
+                      value: mobilePush,
                       onChanged: (val) {
-                        setState(() {
-                          pushNotif = !pushNotif;
-                        });
+                        if (!val) {
+                          stopNotifDialog("mobilePush");
+                        }
+                        else {
+                          FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("mobilePush").remove();
+                          setState(() {
+                            mobilePush = val;
+                          });
+                        }
                       },
                       title: new Text("Push Notifications", style: TextStyle(fontSize: 17, color: currTextColor)),
                     ),
                     new SwitchListTile.adaptive(
                       activeColor: mainColor,
                       activeTrackColor: mainColor,
-                      value: chatNotif,
+                      value: webPush,
                       onChanged: (val) {
-                        setState(() {
-                          chatNotif = !chatNotif;
-                        });
+                        if (!val) {
+                          stopNotifDialog("webPush");
+                        }
+                        else {
+                          FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("webPush").remove();
+                          setState(() {
+                            webPush = val;
+                          });
+                        }
                       },
-                      title: new Text("Chat Notifications", style: TextStyle(fontSize: 17, color: currTextColor)),
+                      title: new Text("Web Notifications", style: TextStyle(fontSize: 17, color: currTextColor)),
+                    ),
+                    new SwitchListTile.adaptive(
+                      activeColor: mainColor,
+                      activeTrackColor: mainColor,
+                      value: emailPush,
+                      onChanged: (val) {
+                        if (!val) {
+                          stopNotifDialog("emailPush");
+                        }
+                        else {
+                          FirebaseDatabase.instance.reference().child("users").child(currUser.userID).child("emailPush").remove();
+                          setState(() {
+                            emailPush = val;
+                          });
+                        }
+                      },
+                      title: new Text("Email Notifications", style: TextStyle(fontSize: 17, color: currTextColor)),
                     ),
                     new Visibility(
                       visible: (currUser.roles.contains('Developer')),

@@ -52,7 +52,7 @@ class _SendNotificationPageState extends State<SendNotificationPage> {
       FirebaseDatabase.instance.reference().child("notifications").push().update({
         "title": title,
         "body": alert,
-        "topic": topics
+        "topics": topics
       });
       print("Notification added to queue");
       router.pop(context);

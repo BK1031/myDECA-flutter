@@ -73,7 +73,52 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
           ));
         });
       }
-      if (user.chapter.chapterID == currUser.chapter.chapterID && user.roles.contains(route.split("?id=")[1])) {
+      if (chatID == "Officer" && user.chapter.chapterID == currUser.chapter.chapterID && (user.roles.contains("Officer") || user.roles.contains("Advisor"))) {
+        setState(() {
+          chatType = "Role";
+          usersList.add(new Container(
+            child: new InkWell(
+              child: new Card(
+                color: currCardColor,
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  child: new Row(
+                    children: [
+                      new CircleAvatar(
+                        radius: 25,
+                        backgroundColor: roleColors[user.roles.first],
+                        child: new ClipRRect(
+                          borderRadius: new BorderRadius.all(Radius.circular(45)),
+                          child: new CachedNetworkImage(
+                            imageUrl: user.profileUrl,
+                            height: 45,
+                            width: 45,
+                          ),
+                        ),
+                      ),
+                      new Padding(padding: EdgeInsets.all(8),),
+                      new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          new Text(
+                            user.firstName + " " + user.lastName,
+                            style: TextStyle(color: currTextColor),
+                          ),
+                          new Text(
+                            user.email,
+                            style: TextStyle(color: currTextColor),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ));
+        });
+      }
+      else if (user.chapter.chapterID == currUser.chapter.chapterID && user.roles.contains(route.split("?id=")[1])) {
         // User in Role Chat
         setState(() {
           chatType = "Role";

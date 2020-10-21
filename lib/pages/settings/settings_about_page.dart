@@ -28,7 +28,7 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
   }
 
   launchContributeUrl() async {
-    const url = 'https://github.com/BK1031/VC-DECA-flutter';
+    const url = 'https://github.com/equinox-initiative/myDECA-flutter';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -37,7 +37,7 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
   }
 
   launchGuidelinesUrl() async {
-    const url = 'https://github.com/BK1031/VC-DECA-flutter/wiki/contributing';
+    const url = 'https://github.com/equinox-initiative/myDECA-flutter/wiki/contributing';
     if (await canLaunch(url)) {
       await launch(url);
     } else {

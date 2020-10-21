@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:mydeca_flutter/models/chat_message.dart';
 import 'package:mydeca_flutter/models/user.dart';
 import 'package:mydeca_flutter/pages/chat/send_media_dialog.dart';
@@ -53,6 +55,87 @@ class _ChatViewPageState extends State<ChatViewPage> {
     }
   }
 
+  void deleteDialog(ChatMessage message) {
+    showDialog(
+        context: context,
+        child: new AlertDialog(
+          backgroundColor: currCardColor,
+          title: new Text("Delete Message", style: TextStyle(color: currTextColor),),
+          content: new Text("Are you sure you want to delete this message?\n\n${message.message}", style: TextStyle(color: currTextColor)),
+          actions: [
+            new FlatButton(
+                child: new Text("CANCEL"),
+                textColor: mainColor,
+                onPressed: () {
+                  router.pop(context);
+                }
+            ),
+            new FlatButton(
+                child: new Text("DELETE"),
+                textColor: Colors.red,
+                onPressed: () {
+                  FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("chat").child(chatID).child(message.key).remove();
+                  router.pop(context);
+                }
+            )
+          ],
+        )
+    );
+  }
+
+  void messageOptionsSheet(ChatMessage message) {
+    showModalBottomSheet(context: context, builder: (BuildContext context) {
+      return new Container(
+        color: currBackgroundColor,
+        child: new SingleChildScrollView(
+          child: new Column(
+            children: [
+              new ListTile(
+                title: new Linkify(
+                  text: message.message,
+                  style: TextStyle(color: currTextColor, fontSize: 15),
+                  linkStyle: TextStyle(color: mainColor, fontSize: 15),
+                  onOpen: (link) {
+                    launch(link.url);
+                  },
+                ),
+                subtitle: new Text(DateFormat().format(message.date), style: TextStyle(color: Colors.grey)),
+              ),
+              new ListTile(
+                leading: new Icon(Icons.copy, color: Colors.grey,),
+                title: new Text("Copy ID", style: TextStyle(color: currTextColor),),
+                onTap: () {
+                  Clipboard.setData(new ClipboardData(text: message.key));
+                  router.pop(context);
+                },
+              ),
+              new ListTile(
+                leading: new Icon(Icons.copy, color: Colors.grey,),
+                title: new Text("Copy Message", style: TextStyle(color: currTextColor),),
+                onTap: () {
+                  Clipboard.setData(new ClipboardData(text: message.message));
+                  router.pop(context);
+                },
+              ),
+              new Visibility(
+                visible: currUser.roles.contains("Developer") || currUser.roles.contains("Advisor") || currUser.roles.contains("Officer"),
+                child: new ListTile(
+                  leading: new Icon(Icons.delete, color: Colors.grey,),
+                  title: new Text("Delete", style: TextStyle(color: currTextColor),),
+                  onTap: () {
+                    router.pop(context);
+                    deleteDialog(message);
+                  },
+                ),
+              ),
+              new ListTile()
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
   void getChat(String route) {
     rendered = true;
     chatID = route.split("?id=")[1];
@@ -87,7 +170,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
             if (chatList.length > 1 && message.author.userID == chatList[chatList.length - 2].author.userID &&  message.date.difference(chatList[chatList.length - 2].date).inMinutes.abs() < 5) {
               widgetList.add(new InkWell(
                 onLongPress: () {
-
+                  messageOptionsSheet(message);
                 },
                 child: new Container(
                   padding: EdgeInsets.only(left: 12, right: 15),
@@ -114,7 +197,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
             else {
               widgetList.add(new InkWell(
                 onLongPress: () {
-
+                  messageOptionsSheet(message);
                 },
                 child: new Container(
                   padding: EdgeInsets.only(left: 12, top: 8, right: 15),
@@ -167,7 +250,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
             if (chatList.length > 1 && message.author.userID == chatList[chatList.length - 2].author.userID &&  message.date.difference(chatList[chatList.length - 2].date).inMinutes.abs() < 5) {
               widgetList.add(new InkWell(
                 onLongPress: () {
-
+                  messageOptionsSheet(message);
                 },
                 child: new Container(
                   padding: EdgeInsets.only(left: 12, right: 15),
@@ -193,7 +276,7 @@ class _ChatViewPageState extends State<ChatViewPage> {
             else {
               widgetList.add(new InkWell(
                 onLongPress: () {
-
+                  messageOptionsSheet(message);
                 },
                 child: new Container(
                   padding: EdgeInsets.only(left: 12, top: 8, right: 15),
@@ -251,6 +334,9 @@ class _ChatViewPageState extends State<ChatViewPage> {
           );
         });
       });
+    });
+    FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("chat").child(chatID).onChildRemoved.listen((event) {
+      router.navigateTo(context, "/chat/view?id=$chatID", transition: TransitionType.fadeIn, replace: true);
     });
   }
 

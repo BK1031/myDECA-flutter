@@ -54,7 +54,7 @@ class _ConferencePageState extends State<ConferencePage> {
                           imageUrl: conference.imageUrl,
                           height: 150.0,
                           width: double.infinity,
-                          fit: BoxFit.fitWidth,
+                          fit: BoxFit.cover,
                         ),
                       ),
                       new Center(
@@ -121,7 +121,7 @@ class _ConferencePageState extends State<ConferencePage> {
               ),
               new Visibility(
                   visible: (conferenceList.length == 0),
-                  child: new Text("Nothing to see here!\nCheck back later for conferences.", textAlign: TextAlign.center, style: TextStyle(fontSize: 17, color: currTextColor),)
+                  child: Center(child: new Text("Nothing to see here!\nCheck back later for conferences.", textAlign: TextAlign.center, style: TextStyle(fontSize: 17, color: currTextColor),))
               ),
               Container(
                 child: new Column(
@@ -137,7 +137,7 @@ class _ConferencePageState extends State<ConferencePage> {
               ),
               new Visibility(
                   visible: (pastConferenceList.length == 0),
-                  child: new Text("Nothing to see here!\nCheck back later for conferences.", textAlign: TextAlign.center, style: TextStyle(fontSize: 17, color: currTextColor),)
+                  child: Center(child: new Text("Nothing to see here!\nCheck back later for conferences.", textAlign: TextAlign.center, style: TextStyle(fontSize: 17, color: currTextColor),))
               ),
               Container(
                 child: new Column(

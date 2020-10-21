@@ -4,6 +4,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:mydeca_flutter/models/chapter.dart';
 import 'package:mydeca_flutter/models/user.dart';
 import 'package:mydeca_flutter/utils/config.dart';
@@ -193,6 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
             "firstName": currUser.firstName.replaceAll(new RegExp(r"\s+\b|\b\s"), ""),
             "lastName": currUser.lastName.replaceAll(new RegExp(r"\s+\b|\b\s"), ""),
             "email": currUser.email,
+            "phone": currUser.phone,
             "emailVerified": currUser.emailVerified,
             "gender": currUser.gender,
             "roles": currUser.roles,
@@ -431,6 +433,22 @@ class _RegisterPageState extends State<RegisterPage> {
                                   onChanged: (value) {
                                     currUser.email = value;
                                   },
+                                ),
+                                InternationalPhoneNumberInput(
+                                  onInputChanged: (value) {
+                                    currUser.phone = value.phoneNumber;
+                                  },
+                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                  hintText: "Phone",
+                                  initialValue: PhoneNumber(isoCode: "US"),
+                                  countries: [
+                                    "US",
+                                    "CN",
+                                    "CA",
+                                    "IN",
+                                    "JP",
+                                    "KR"
+                                  ],
                                 ),
                                 new Visibility(
                                   visible: !advisorCodeExists,

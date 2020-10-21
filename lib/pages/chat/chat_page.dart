@@ -27,7 +27,18 @@ class _ChatPageState extends State<ChatPage> {
       ));
     });
     currUser.roles.reversed.forEach((element) {
-      if (element != "Member") {
+      if (element == "Advisor") {
+        setState(() {
+          widgetList.add(new ListTile(
+            title: new Text("Officer", style: TextStyle(fontSize: 17, color: currTextColor),),
+            trailing: new Icon(Icons.arrow_forward_ios, color: mainColor,),
+            onTap: () {
+              router.navigateTo(context, "/chat/view?id=Officer", transition: TransitionType.native);
+            },
+          ));
+        });
+      }
+      if (element != "Member" && element != "President" && element != "Advisor") {
         setState(() {
           widgetList.add(new ListTile(
             title: new Text(element, style: TextStyle(fontSize: 17, color: currTextColor),),

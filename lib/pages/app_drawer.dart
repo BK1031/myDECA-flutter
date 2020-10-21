@@ -25,6 +25,7 @@ class _AppDrawerState extends State<AppDrawer> {
         backgroundColor: mainColor,
         body: new SafeArea(
           child: new Container(
+            padding: EdgeInsets.only(left: 8, right: 8),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

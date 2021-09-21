@@ -228,32 +228,6 @@ class _HomePageState extends State<HomePage> {
         }
       });
     });
-    // FirebaseDatabase.instance.reference().child("users").child(currUser.userID).onValue.listen((value) {
-    //   setState(() {
-    //     currUser = User.fromSnapshot(value.snapshot);
-    //   });
-    //   if (!currUser.emailVerified) {
-    //     welcomeDialog();
-    //   }
-    //   currUser.groups.forEach((element) async {
-    //     setState(() {
-    //       groupWidgetList.clear();
-    //     });
-    //     await FirebaseDatabase.instance.reference().child("chapters").child(currUser.chapter.chapterID).child("groups").child(element).child("name").once().then((value) {
-    //       if (value.value != null) {
-    //         setState(() {
-    //           groupWidgetList.add(new Card(
-    //             color: mainColor,
-    //             child: new Container(
-    //               padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
-    //               child: new Text(value.value, style: TextStyle(color: Colors.white),),
-    //             ),
-    //           ));
-    //         });
-    //       }
-    //     });
-    //   });
-    // });
   }
 
   void getAdvisorInfo() {
